@@ -142,7 +142,6 @@ onclick="answer(false)">
 
 if(isTtsOn()) speakText(data.t);
 }
-}
 
 /* ANSWER */
 function answer(choice){
@@ -195,7 +194,6 @@ NEXT
 </div>`;
 
 if(isTtsOn()) speakText(resultText);
-}
 }
 
 /* NEXT */
