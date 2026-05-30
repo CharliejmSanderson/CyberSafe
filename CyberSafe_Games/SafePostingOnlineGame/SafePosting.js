@@ -274,92 +274,13 @@ ${unlocked ? "✔" : "🔒"}
 
 /* SETTINGS */
 function settings(){
-
-document.getElementById("screen").innerHTML = `
-
-${topBar("Settings")}
-
-<div class="content">
-
-<h2>Choose a Theme</h2>
-
-<div class="setting-option"
-onclick="setTheme('normal')">
-
-🌸 Default Theme
-
-</div>
-
-<div class="setting-option"
-onclick="setTheme('dark')">
-
-🌙 Dark Theme
-
-</div>
-
-<div class="setting-option"
-onclick="setTheme('contrast-dark')">
-
-⚫ High Contrast Dark
-
-</div>
-
-<div class="setting-option"
-onclick="setTheme('contrast-light')">
-
-⚪ High Contrast Light
-
-</div>
-
-<div class="setting-option"
-onclick="setTheme('blue-yellow')">
-
-🔵 Blue & Yellow Accessible
-
-</div>
-
-<h2 style="margin-top:30px;">
-Text Size
-</h2>
-
-<div class="setting-option"
-onclick="setTextSize('small')">
-
-🔤 Small Text
-
-</div>
-
-<div class="setting-option"
-onclick="setTextSize('medium')">
-
-🔠 Medium Text
-
-</div>
-
-<div class="setting-option"
-onclick="setTextSize('large')">
-
-🅰 Large Text
-
-</div>
-
-<div class="setting-option"
-onclick="setTextSize('xlarge')">
-
-🅰🅰 Extra Large Text
-
-</div>
-
-<button class="next-btn"
-onclick="show()">
-
-DONE
-
-</button>
-
-</div>`;
+document.getElementById('settingsModal') && document.getElementById('settingsModal').classList.add('active');
+document.getElementById('settingsOverlay') && document.getElementById('settingsOverlay').classList.add('active');
 }
 
+function closeSettings(){
+document.getElementById('settingsOverlay') && document.getElementById('settingsOverlay').classList.remove('active');
+}
 /* THEME */
 function setTheme(theme){
 
