@@ -282,6 +282,71 @@ h2{
     justify-content:center;
 }
 
+/* SPEAK BUTTON */
+.speak-btn{
+    background:none;
+    border:none;
+    font-size:1.3rem;
+    cursor:pointer;
+    padding:6px;
+    border-radius:50%;
+    opacity:0.7;
+    display:inline-block;
+    vertical-align:middle;
+}
+.speak-btn:hover{ opacity:1; }
+
+/* TTS TOGGLE ROW */
+.tts-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px;
+    border:2px solid #4b2e83;
+    border-radius:14px;
+    background:white;
+    margin-bottom:8px;
+    font-size:16px;
+    font-weight:bold;
+    color:#4b2e83;
+    cursor:pointer;
+}
+
+/* TOGGLE SWITCH */
+.toggle-switch{
+    position:relative;
+    width:48px;
+    height:26px;
+    flex-shrink:0;
+}
+.toggle-switch input{
+    opacity:0;
+    width:0;
+    height:0;
+    position:absolute;
+}
+.toggle-track{
+    position:absolute;
+    inset:0;
+    background:#cccccc;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background 0.2s;
+}
+.toggle-track::after{
+    content:'';
+    position:absolute;
+    width:20px;
+    height:20px;
+    background:#ffffff;
+    border-radius:50%;
+    top:3px;
+    left:3px;
+    transition:transform 0.2s;
+}
+.toggle-switch input:checked + .toggle-track{ background:#66bb6a; }
+.toggle-switch input:checked + .toggle-track::after{ transform:translateX(22px); }
+
 </style>
 </head>
 
@@ -311,6 +376,15 @@ h2{
       <button class="settings-btn" onclick="setTextSize('medium')">Medium</button>
       <button class="settings-btn" onclick="setTextSize('large')">Large</button>
       <button class="settings-btn" onclick="setTextSize('xlarge')">Extra Large</button>
+    </div>
+
+    <div class="settings-section-label">Accessibility</div>
+    <div class="tts-row">
+      <span>&#128266; Read content aloud</span>
+      <label class="toggle-switch" aria-label="Enable text to speech">
+        <input type="checkbox" id="ttsToggle" onchange="handleTtsToggle()">
+        <span class="toggle-track"></span>
+      </label>
     </div>
 
     <button class="settings-done-btn" onclick="closeSettings()">Done</button>
