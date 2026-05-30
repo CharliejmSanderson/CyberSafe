@@ -294,7 +294,7 @@ main{
 .answer-buttons{display:flex;gap:12px;margin-top:14px;}
 .btn-answer{
   flex:1;padding:15px 8px;border:none;border-radius:14px;
-  font-family:var(--font);font-size:1.05rem;font-weight:700;
+  font-family:var(--font);font-size:var(--fs);font-weight:700;
   cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.15);
   -webkit-tap-highlight-color:transparent;
 }
@@ -352,7 +352,7 @@ main{
   background:#f8f8f8;border-radius:12px;padding:10px 12px;
 }
 .clue-icon{font-size:1.3rem;flex-shrink:0;line-height:1.3;}
-.clue-text{font-size:0.88rem;line-height:1.5;color:#333;font-weight:500;}
+.clue-text{font-size:var(--fs);line-height:1.5;color:#333;font-weight:500;}
 
 .btn-continue{
   display:block;width:calc(100% - 40px);margin:0 20px 28px;
@@ -376,7 +376,7 @@ main{
 .results-trophy{font-size:3.5rem;margin-bottom:8px;}
 .results-title{font-family:'Inknut Antiqua',serif;font-size:1.5rem;color:#1A3A6B;margin-bottom:4px;}
 .results-score{font-family:'Inknut Antiqua',serif;font-size:3rem;color:#FF7F5C;margin:12px 0;line-height:1;}
-.results-message{font-size:0.92rem;color:#555;line-height:1.6;margin-bottom:24px;}
+.results-message{font-size:var(--fs);color:#555;line-height:1.6;margin-bottom:24px;}
 .btn-restart{
   width:100%;background:#FF7F5C;color:#fff;border:none;
   border-radius:14px;padding:15px;
@@ -478,22 +478,6 @@ main{
       <button class="size-btn" onclick="setSize('1.15rem',this)">Large</button>
       <button class="size-btn" onclick="setSize('1.3rem',this)">Extra Large</button>
     </div>
-
-    <div class="settings-section-label">Font</div>
-    <div class="font-grid">
-      <button class="font-btn active" style="font-family:'Inter',sans-serif"
-              onclick="setFont(&quot;'Inter',sans-serif&quot;,this)">Inter</button>
-      <button class="font-btn" style="font-family:'Inknut Antiqua',serif"
-              onclick="setFont(&quot;'Inknut Antiqua',serif&quot;,this)">Inknut</button>
-      <button class="font-btn" style="font-family:'Atkinson Hyperlegible',sans-serif"
-              onclick="setFont(&quot;'Atkinson Hyperlegible',sans-serif&quot;,this)">Atkinson</button>
-      <button class="font-btn" style="font-family:serif"
-              onclick="setFont('serif',this)">Serif</button>
-    </div>
-
-    <button class="btn-home-from-settings" onclick="goHomeFromSettings()" aria-label="Go to home screen">
-      &#127968; Back to Home
-    </button>
 
     <div class="settings-section-label" style="margin-top:18px;">Accessibility</div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
