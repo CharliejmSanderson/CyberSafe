@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<title>Spot the Scam</title>
+<link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&family=Inter:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=OpenDyslexic&display=swap" rel="stylesheet"/>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+
+:root{
+  --bg:#FF7F5C;
+  --header:#1A3A6B;
+  --card:#00C9C8;
+  --card-inner:#fff;
+  --text:#222;
+  --text-inv:#fff;
+  --btn-real:#2ECC71;
+  --btn-fake:#E74C3C;
+  --accent:#FF7F5C;
+  --nav-border:#1A3A6B;
+  --fs:1rem;
+  --font:'Inter',sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#111;--header:#000;--card:#222;--card-inner:#1a1a1a;
+  --text:#fff;--text-inv:#fff;--nav-border:#fff;
+}
+[data-theme="light-hc"]{
+  --bg:#fff;--header:#000;--card:#f5f5f5;--card-inner:#fff;
+  --text:#000;--text-inv:#fff;--nav-border:#000;
+}
+[data-theme="blue-yellow"]{
+  --bg:#00008B;--header:#000080;--card:#FFD700;--card-inner:#fffde7;
+  --text:#000;--text-inv:#000;--nav-border:#000;
+}
+
+body{
+  font-family:var(--font);
+  background:#2a2a2a;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  transition: background 0.3s;
+}
+
+#app{
+  width:100%;max-width:430px;min-height:100vh;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  position:relative;overflow-x:hidden;
+  transition: background 0.3s;
+}
+
+
+header{
+  width:100%;background:var(--header);
+  padding:13px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 3px 10px rgba(0,0,0,0.3);flex-shrink:0;
+}
+header h1{
+  font-family:'Inknut Antiqua',serif;
+  color:#fff;font-size:1.15rem;
+}
+.header-right{display:flex;align-items:center;gap:10px;}
+.score-badge{
+  background:#00C9C8;color:#1A3A6B;
+  font-weight:700;font-size:0.8rem;
+  padding:5px 11px;border-radius:999px;white-space:nowrap;
+  display:none;
+}
+.btn-settings{
+  background:none;border:none;cursor:pointer;
+  font-size:1.4rem;line-height:1;
+  -webkit-tap-highlight-color:transparent;
+  color:#fff;padding:2px;
+}
+
+
+#settings-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.55);
+  display:flex;align-items:flex-end;justify-content:center;
+  z-index:200;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.25s;
+}
+#settings-overlay.visible{opacity:1;pointer-events:all;}
+.settings-sheet{
+  background:#7a9e6e; 
+  border-radius:24px 24px 0 0;
+  padding:24px 20px 40px;
+  width:100%;max-width:430px;
+  transform:translateY(100%);
+  transition:transform 0.3s ease;
+  position:relative;
+}
+#settings-overlay.visible .settings-sheet{transform:translateY(0);}
+
+.settings-close{
+  position:absolute;top:16px;right:16px;
+  width:34px;height:34px;border-radius:50%;
+  background:#fff;border:none;cursor:pointer;
+  font-size:1.1rem;font-weight:700;color:#333;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 6px rgba(0,0,0,0.15);
+  -webkit-tap-highlight-color:transparent;
+}
+.settings-title{
+  font-family:'Inknut Antiqua',serif;
+  font-size:1.6rem;font-weight:700;color:#111;
+  margin-bottom:20px;
+}
+.settings-section-label{
+  font-weight:700;font-size:1rem;color:#111;
+  margin-bottom:10px;margin-top:18px;
+}
+
+.theme-btn{
+  width:100%;padding:14px;border-radius:12px;
+  border:none;cursor:pointer;
+  font-family:var(--font);font-size:1rem;font-weight:600;
+  margin-bottom:8px;
+  background:#fff;color:#333;
+  -webkit-tap-highlight-color:transparent;
+  transition:background 0.15s,color 0.15s;
+}
+.theme-btn.active{background:#E07A4F;color:#fff;}
+
+.size-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  margin-bottom:8px;
+}
+.size-btn{
+  padding:13px 8px;border-radius:12px;
+  border:none;cursor:pointer;
+  font-family:var(--font);font-size:0.95rem;font-weight:600;
+  background:#fff;color:#333;
+  -webkit-tap-highlight-color:transparent;
+  transition:background 0.15s,color 0.15s;
+}
+.size-btn.active{background:#E07A4F;color:#fff;}
+
+.font-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  margin-bottom:8px;
+}
+.font-btn{
+  padding:13px 8px;border-radius:12px;
+  border:none;cursor:pointer;
+  font-size:0.9rem;font-weight:600;
+  background:#fff;color:#333;
+  -webkit-tap-highlight-color:transparent;
+  transition:background 0.15s,color 0.15s;
+}
+.font-btn.active{background:#E07A4F;color:#fff;}
+
+
+.btn-home-from-settings{
+  width:100%;margin-top:22px;
+  padding:15px;border-radius:14px;border:none;
+  background:#1A3A6B;color:#fff;
+  font-family:var(--font);font-size:1rem;font-weight:700;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
+
+#home-screen{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:28px 18px 44px;gap:0;
+}
+.home-icon{font-size:5rem;margin-bottom:14px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2));}
+.home-title{
+  font-family:'Inknut Antiqua',serif;
+  font-size:2rem;color:#fff;text-align:center;
+  line-height:1.2;margin-bottom:8px;
+  text-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+.home-tagline{
+  font-size:var(--fs);color:rgba(255,255,255,0.92);
+  text-align:center;margin-bottom:32px;
+  font-weight:600;
+}
+.home-card{
+  background:#fff;border-radius:18px;
+  padding:18px 16px;width:100%;
+  box-shadow:0 8px 24px rgba(0,0,0,0.15);
+  margin-bottom:24px;
+}
+.home-features{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.home-features li{
+  display:flex;align-items:center;gap:12px;
+  font-size:var(--fs);color:#333;font-weight:600;
+}
+.home-features li .fi{font-size:1.5rem;flex-shrink:0;}
+.btn-start{
+  width:100%;background:var(--header);color:#fff;
+  border:none;border-radius:16px;padding:18px;
+  font-family:'Inknut Antiqua',serif;font-size:1.15rem;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(26,58,107,0.4);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-start:active{transform:scale(0.97);}
+
+#quiz-screen{display:none;flex-direction:column;align-items:center;flex:1;}
+main{
+  width:100%;padding:16px 13px 32px;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+
+.progress-wrap{width:100%;}
+.progress-label{
+  font-family:'Inknut Antiqua',serif;
+  color:#fff;font-size:0.88rem;
+  margin-bottom:6px;text-align:center;
+}
+.progress-bar-bg{
+  width:100%;height:8px;
+  background:rgba(255,255,255,0.35);
+  border-radius:999px;overflow:hidden;
+}
+.progress-bar-fill{
+  height:100%;background:var(--header);
+  border-radius:999px;transition:width 0.4s ease;
+}
+
+.card{
+  width:100%;background:var(--card);
+  border-radius:18px;padding:14px 13px 13px;
+  box-shadow:0 6px 22px rgba(0,0,0,0.18);
+}
+.card-label{
+  font-family:'Inknut Antiqua',serif;
+  font-size:0.72rem;color:var(--header);
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;
+}
+
+.sms-wrap{background:var(--card-inner);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.sms-bar{
+  background:#1a1a2e;padding:9px 13px;
+  display:flex;align-items:center;gap:9px;
+}
+.sms-avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:#00C9C8;display:flex;align-items:center;
+  justify-content:center;font-size:1rem;flex-shrink:0;
+}
+.sms-name{color:#fff;font-weight:700;font-size:0.88rem;}
+.sms-sub{color:rgba(255,255,255,0.6);font-size:0.7rem;}
+.sms-body{padding:12px 13px;font-size:var(--fs);line-height:1.6;color:var(--text);}
+.sms-link{
+  display:block;margin-top:8px;
+  background:#f0f0f0;border-radius:8px;
+  padding:6px 10px;font-size:0.78rem;
+  color:#0066cc;word-break:break-all;font-family:monospace;
+}
+.sms-time{padding:4px 13px 10px;font-size:0.7rem;color:#999;text-align:right;}
+
+
+.email-wrap{background:var(--card-inner);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.email-bar{
+  background:#2C3E50;padding:9px 13px;
+  display:flex;align-items:center;gap:9px;
+}
+.email-bar-icon{
+  width:30px;height:30px;border-radius:7px;
+  background:#3498DB;display:flex;align-items:center;
+  justify-content:center;font-size:0.95rem;flex-shrink:0;
+}
+.email-bar-lbl{color:#fff;font-size:0.82rem;font-weight:600;}
+.email-meta{padding:10px 13px 8px;border-bottom:1px solid #eee;}
+.email-row{display:flex;gap:6px;margin-bottom:3px;font-size:0.8rem;flex-wrap:wrap;}
+.email-row .lbl{font-weight:700;color:#1A3A6B;min-width:40px;}
+.email-row .val{color:#444;}
+.email-subj{padding:8px 13px 6px;font-weight:700;font-size:0.88rem;color:#111;border-bottom:1px solid #eee;}
+.email-body{padding:10px 13px 13px;font-size:var(--fs);line-height:1.6;color:var(--text);}
+
+.scam-img-card{
+  background:var(--card-inner);border-radius:12px;
+  overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+.scam-img-card svg{display:block;width:100%;height:auto;}
+
+.answer-buttons{display:flex;gap:12px;margin-top:14px;}
+.btn-answer{
+  flex:1;padding:15px 8px;border:none;border-radius:14px;
+  font-family:var(--font);font-size:1.05rem;font-weight:700;
+  cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.15);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-answer:active:not(:disabled){transform:scale(0.95);}
+.btn-answer:disabled{opacity:0.45;cursor:not-allowed;}
+.btn-real{background:var(--btn-real);color:#fff;}
+.btn-fake{background:var(--btn-fake);color:#fff;}
+
+.nav-buttons{display:flex;gap:12px;width:100%;}
+.btn-nav{
+  flex:1;padding:12px 0;
+  border:2px solid var(--nav-border);border-radius:12px;
+  background:var(--card-inner);color:var(--nav-border);
+  font-family:var(--font);font-weight:700;font-size:0.88rem;
+  cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,0.1);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-nav:active:not(:disabled){background:var(--nav-border);color:#fff;}
+.btn-nav:disabled{opacity:0.35;cursor:not-allowed;}
+
+.dialog-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.55);
+  display:flex;align-items:flex-end;justify-content:center;
+  z-index:100;opacity:0;pointer-events:none;transition:opacity 0.25s;
+}
+.dialog-overlay.visible{opacity:1;pointer-events:all;}
+.dialog-box{
+  background:#fff;border-radius:24px 24px 0 0;
+  overflow:hidden;
+  width:100%;max-width:430px;
+  box-shadow:0 -8px 32px rgba(0,0,0,0.2);
+  transform:translateY(100%);transition:transform 0.3s ease;
+}
+.dialog-overlay.visible .dialog-box{transform:translateY(0);}
+
+.dialog-banner{
+  padding:22px 20px 18px;
+  text-align:center;
+}
+.dialog-banner.correct{background:#d4edda;}
+.dialog-banner.wrong  {background:#fde8e8;}
+.dialog-big-icon{font-size:3.2rem;line-height:1;margin-bottom:8px;}
+.dialog-title{
+  font-family:'Inknut Antiqua',serif;font-size:1.4rem;margin:0;
+}
+.dialog-title.correct{color:#1a7a3c;}
+.dialog-title.wrong  {color:#c0392b;}
+
+.dialog-clues{
+  padding:16px 20px 20px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.clue-row{
+  display:flex;align-items:flex-start;gap:10px;
+  background:#f8f8f8;border-radius:12px;padding:10px 12px;
+}
+.clue-icon{font-size:1.3rem;flex-shrink:0;line-height:1.3;}
+.clue-text{font-size:0.88rem;line-height:1.5;color:#333;font-weight:500;}
+
+.btn-continue{
+  display:block;width:calc(100% - 40px);margin:0 20px 28px;
+  background:#1A3A6B;color:#fff;border:none;
+  border-radius:14px;padding:15px;
+  font-family:var(--font);font-weight:700;font-size:1rem;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  text-align:center;
+}
+
+#results-screen{
+  display:none;flex:1;width:100%;
+  padding:24px 14px 40px;
+  align-items:center;justify-content:center;flex-direction:column;
+}
+.results-card{
+  background:#fff;border-radius:22px;padding:30px 20px;
+  text-align:center;box-shadow:0 10px 36px rgba(0,0,0,0.18);width:100%;
+}
+.results-trophy{font-size:3.5rem;margin-bottom:8px;}
+.results-title{font-family:'Inknut Antiqua',serif;font-size:1.5rem;color:#1A3A6B;margin-bottom:4px;}
+.results-score{font-family:'Inknut Antiqua',serif;font-size:3rem;color:#FF7F5C;margin:12px 0;line-height:1;}
+.results-message{font-size:0.92rem;color:#555;line-height:1.6;margin-bottom:24px;}
+.btn-restart{
+  width:100%;background:#FF7F5C;color:#fff;border:none;
+  border-radius:14px;padding:15px;
+  font-family:var(--font);font-weight:700;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(255,127,92,0.4);
+  -webkit-tap-highlight-color:transparent;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<header>
+  <h1>🔍 Spot the Scam</h1>
+  <div class="header-right">
+    <div class="score-badge" id="score-display" aria-live="polite">Score: 0/7</div>
+    <button class="btn-settings" onclick="openSettings()" aria-label="Open settings">⚙️</button>
+  </div>
+</header>
+
+<div id="home-screen">
+  <div class="home-icon">🕵️</div>
+  <h2 class="home-title">Spot the Scam</h2>
+  <p class="home-tagline">Real or Fake? You decide.</p>
+  <div class="home-card">
+    <ul class="home-features">
+      <li><span class="fi">📋</span> 7 real-world messages</li>
+      <li><span class="fi">📸</span> Text &amp; image examples</li>
+      <li><span class="fi">✅</span> Instant feedback</li>
+      <li><span class="fi">🏆</span> Score at the end</li>
+    </ul>
+  </div>
+  <button class="btn-start" onclick="start_quiz()" aria-label="Start the quiz">🚀 Start the Game</button>
+</div>
+
+<div id="quiz-screen">
+  <main role="main">
+    <div class="progress-wrap" aria-label="Quiz progress">
+      <p class="progress-label" id="question-counter">Question 1 of 7</p>
+      <div class="progress-bar-bg" role="progressbar"
+           aria-valuemin="0" aria-valuemax="7" aria-valuenow="1">
+        <div class="progress-bar-fill" id="progress-fill" style="width:14.28%;"></div>
+      </div>
+    </div>
+    <div class="card" id="question-card">
+      <p class="card-label" id="card-label">Is this real or fake?</p>
+      <div id="message-content"></div>
+      <div class="answer-buttons" role="group" aria-label="Answer choices">
+        <button class="btn-answer btn-real" id="btn-real" onclick="ans_submit('real')" aria-label="Real">✅ Real</button>
+        <button class="btn-answer btn-fake" id="btn-fake" onclick="ans_submit('fake')" aria-label="Fake">❌ Fake</button>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn-nav" id="btn-prev" onclick="navigate(-1)" disabled>← Prev</button>
+      <button class="btn-nav" id="btn-next" onclick="navigate(1)"  disabled>Next →</button>
+    </div>
+  </main>
+</div>
+
+<div id="results-screen" role="main">
+  <div class="results-card">
+    <div class="results-trophy" id="results-trophy">🏆</div>
+    <h2 class="results-title">Quiz Complete!</h2>
+    <div class="results-score" id="results-score" aria-live="polite">0 / 7</div>
+    <p class="results-message" id="results-message"></p>
+    <button class="btn-restart" onclick="restart_quiz()">🔄 Try Again</button>
+  </div>
+</div>
+
+<div class="dialog-overlay" id="feedback-dialog"
+     role="dialog" aria-modal="true"
+     aria-labelledby="dialog-title" aria-describedby="dialog-clues">
+  <div class="dialog-box">
+    <div class="dialog-banner" id="dialog-banner">
+      <div class="dialog-big-icon" id="dialog-icon"></div>
+      <h2 class="dialog-title" id="dialog-title"></h2>
+    </div>
+    <div class="dialog-clues" id="dialog-clues"></div>
+    <button class="btn-continue" id="btn-continue" onclick="closeFeedback()">Continue →</button>
+  </div>
+</div>
+
+<div id="settings-overlay" role="dialog" aria-modal="true" aria-label="Settings">
+  <div class="settings-sheet">
+    <button class="settings-close" onclick="closeSettings()" aria-label="Close settings">✕</button>
+    <div class="settings-title">Settings</div>
+
+    <div class="settings-section-label">Theme</div>
+    <button class="theme-btn active" id="theme-default" onclick="setTheme('default',this)">Default</button>
+    <button class="theme-btn" id="theme-dark"    onclick="setTheme('dark',this)">High Contrast Dark</button>
+    <button class="theme-btn" id="theme-lighthc" onclick="setTheme('light-hc',this)">High Contrast Light</button>
+    <button class="theme-btn" id="theme-by"      onclick="setTheme('blue-yellow',this)">Blue–Yellow Accessible</button>
+
+    <div class="settings-section-label">Text Size</div>
+    <div class="size-grid">
+      <button class="size-btn" onclick="setSize('0.82rem',this)">Small</button>
+      <button class="size-btn active" onclick="setSize('1rem',this)">Medium</button>
+      <button class="size-btn" onclick="setSize('1.15rem',this)">Large</button>
+      <button class="size-btn" onclick="setSize('1.3rem',this)">Extra Large</button>
+    </div>
+
+    <div class="settings-section-label">Font</div>
+    <div class="font-grid">
+      <button class="font-btn active" style="font-family:'Inter',sans-serif"
+              onclick="setFont(&quot;'Inter',sans-serif&quot;,this)">Inter</button>
+      <button class="font-btn" style="font-family:'Inknut Antiqua',serif"
+              onclick="setFont(&quot;'Inknut Antiqua',serif&quot;,this)">Inknut</button>
+      <button class="font-btn" style="font-family:'Atkinson Hyperlegible',sans-serif"
+              onclick="setFont(&quot;'Atkinson Hyperlegible',sans-serif&quot;,this)">Atkinson</button>
+      <button class="font-btn" style="font-family:serif"
+              onclick="setFont('serif',this)">Serif</button>
+    </div>
+
+    <button class="btn-home-from-settings" onclick="goHomeFromSettings()" aria-label="Go to home screen">
+      🏠 Back to Home
+    </button>
+  </div>
+</div>
+
+</div>
+
+<script>
+
+function openSettings(){document.getElementById('settings-overlay').classList.add('visible');}
+function closeSettings(){document.getElementById('settings-overlay').classList.remove('visible');}
+
+function goHomeFromSettings(){
+  closeSettings();
+
+  document.getElementById('quiz-screen').style.display='none';
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('score-display').style.display='none';
+  document.getElementById('home-screen').style.display='flex';
+
+  current_idx=0; score=0; answers=new Array(questions.length).fill(null);
+}
+
+function setTheme(t,btn){
+  document.getElementById('app').setAttribute('data-theme', t==='default'?'':t);
+  document.querySelectorAll('.theme-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+function setSize(s,btn){
+  document.documentElement.style.setProperty('--fs',s);
+  document.querySelectorAll('.size-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+function setFont(f,btn){
+  document.documentElement.style.setProperty('--font',f);
+  document.querySelectorAll('.font-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+document.getElementById('settings-overlay').addEventListener('click',function(e){
+  if(e.target===this) closeSettings();
+});
+
+function esc(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function smsHTML(c){
+  var link = c.link ? '<span class="sms-link">'+esc(c.link)+'</span>' : '';
+  return '<div class="sms-wrap" role="article" aria-label="Message from '+esc(c.sender)+'">'
+    +'<div class="sms-bar">'
+      +'<div class="sms-avatar" aria-hidden="true">'+c.avatar+'</div>'
+      +'<div><div class="sms-name">'+esc(c.sender)+'</div>'
+      +'<div class="sms-sub">'+esc(c.sub)+'</div></div>'
+    +'</div>'
+    +'<div class="sms-body">'+esc(c.body).replace(/\n/g,'<br>')+link+'</div>'
+    +'<div class="sms-time">'+esc(c.time)+'</div>'
+  +'</div>';
+}
+
+function emailHTML(c){
+  return '<div class="email-wrap" role="article" aria-label="Email from '+esc(c.from)+'">'
+    +'<div class="email-bar"><div class="email-bar-icon">✉️</div>'
+    +'<div class="email-bar-lbl">Mail</div></div>'
+    +'<div class="email-meta">'
+      +'<div class="email-row"><span class="lbl">From:</span><span class="val">'+esc(c.from)+'</span></div>'
+      +'<div class="email-row"><span class="lbl">To:</span><span class="val">'+esc(c.to)+'</span></div>'
+    +'</div>'
+    +'<div class="email-subj">'+esc(c.subject)+'</div>'
+    +'<div class="email-body">'+esc(c.body).replace(/\n/g,'<br>')+'</div>'
+  +'</div>';
+}
+
+
+function bank_sms(){
+  return '<div class="scam-img-card" role="img" aria-label="Screenshot of a suspicious bank SMS">'
+  +'<svg viewBox="0 0 390 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial,sans-serif">'
+
+  +'<rect width="390" height="320" fill="#f2f2f7"/>'
+  +'<rect width="390" height="44" fill="#1a1a2e"/>'
+  +'<text x="16" y="28" fill="#fff" font-size="13" font-weight="bold">9:41</text>'
+  +'<text x="340" y="28" fill="#fff" font-size="12">📶 🔋</text>'
+
+  +'<rect y="44" width="390" height="52" fill="#fff"/>'
+  +'<circle cx="36" cy="70" r="18" fill="#c0392b"/>'
+  +'<text x="36" y="76" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">🏦</text>'
+  +'<text x="64" y="64" fill="#111" font-size="14" font-weight="bold">BANK-ALERT</text>'
+  +'<text x="64" y="82" fill="#888" font-size="11">SMS · Unknown sender</text>'
+  +'<text x="360" y="64" text-anchor="end" fill="#888" font-size="11">09:14</text>'
+
+  +'<rect x="16" y="108" width="280" height="170" rx="16" fill="#fff" stroke="#e0e0e0" stroke-width="1"/>'
+  +'<text x="32" y="132" fill="#111" font-size="12.5" font-weight="bold">⚠️ Account Locked</text>'
+  +'<text x="32" y="154" fill="#333" font-size="11.5">Your account has been locked.</text>'
+  +'<text x="32" y="172" fill="#333" font-size="11.5">Verify now to restore access.</text>'
+  +'<rect x="32" y="184" width="248" height="28" rx="6" fill="#f0f0f0"/>'
+  +'<text x="40" y="202" fill="#0066cc" font-size="10" font-family="monospace">secure-bankverify-login.xyz/verify</text>'
+  +'<text x="32" y="232" fill="#c0392b" font-size="11" font-weight="bold">⏰ Expires in 24 hours</text>'
+  +'<text x="32" y="252" fill="#888" font-size="10">Tap link to verify identity</text>'
+  +'<text x="280" y="268" text-anchor="end" fill="#aaa" font-size="10">09:14 AM ✓</text>'
+  +'</svg></div>';
+}
+
+function lottery_msg(){
+  return '<div class="scam-img-card" role="img" aria-label="Screenshot of a lottery prize WhatsApp message">'
+  +'<svg viewBox="0 0 390 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial,sans-serif">'
+  +'<rect width="390" height="300" fill="#ece5dd"/>'
+  +'<rect width="390" height="44" fill="#075e54"/>'
+  +'<text x="16" y="28" fill="#fff" font-size="13" font-weight="bold">9:41</text>'
+  +'<text x="200" y="28" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">WhatsApp</text>'
+  +'<text x="340" y="28" fill="#fff" font-size="12">📶 🔋</text>'
+
+  +'<rect y="44" width="390" height="52" fill="#075e54"/>'
+  +'<circle cx="36" cy="70" r="18" fill="#aaa"/>'
+  +'<text x="36" y="76" text-anchor="middle" font-size="16">❓</text>'
+  +'<text x="64" y="64" fill="#fff" font-size="14" font-weight="bold">+44 7700 900123</text>'
+  +'<text x="64" y="82" fill="rgba(255,255,255,0.7)" font-size="11">Not in contacts</text>'
+
+  +'<rect x="16" y="108" width="300" height="162" rx="12" fill="#fff"/>'
+  +'<text x="32" y="132" fill="#111" font-size="14" font-weight="bold">🎉 CONGRATULATIONS! 🎉</text>'
+  +'<text x="32" y="154" fill="#333" font-size="11.5">You WON £50,000 in the</text>'
+  +'<text x="32" y="170" fill="#333" font-size="11.5">International Lottery Draw!</text>'
+  +'<rect x="32" y="180" width="268" height="26" rx="6" fill="#fff3cd" stroke="#ffc107" stroke-width="1"/>'
+  +'<text x="42" y="197" fill="#856404" font-size="11" font-weight="bold">⚠️ Pay £150 fee via gift cards</text>'
+  +'<text x="32" y="222" fill="#c0392b" font-size="11" font-weight="bold">⏰ Offer expires in 48 hours!</text>'
+  +'<text x="300" y="260" text-anchor="end" fill="#aaa" font-size="10">11:03 AM ✓✓</text>'
+  +'</svg></div>';
+}
+
+function parcel_sms(){
+  return '<div class="scam-img-card" role="img" aria-label="Screenshot of a fake parcel delivery SMS">'
+  +'<svg viewBox="0 0 390 290" xmlns="http://www.w3.org/2000/svg" font-family="Arial,sans-serif">'
+  +'<rect width="390" height="290" fill="#f2f2f7"/>'
+  +'<rect width="390" height="44" fill="#1a1a2e"/>'
+  +'<text x="16" y="28" fill="#fff" font-size="13" font-weight="bold">9:41</text>'
+  +'<text x="340" y="28" fill="#fff" font-size="12">📶 🔋</text>'
+  +'<rect y="44" width="390" height="52" fill="#fff"/>'
+  +'<circle cx="36" cy="70" r="18" fill="#e67e22"/>'
+  +'<text x="36" y="76" text-anchor="middle" font-size="16">📦</text>'
+  +'<text x="64" y="64" fill="#111" font-size="14" font-weight="bold">MyParcel-UK</text>'
+  +'<text x="64" y="82" fill="#888" font-size="11">SMS · Unknown sender</text>'
+  +'<text x="360" y="64" text-anchor="end" fill="#888" font-size="11">08:55</text>'
+  +'<rect x="16" y="108" width="290" height="152" rx="16" fill="#fff" stroke="#e0e0e0" stroke-width="1"/>'
+  +'<text x="32" y="132" fill="#111" font-size="12.5" font-weight="bold">📦 Delivery Attempt Failed</text>'
+  +'<text x="32" y="152" fill="#333" font-size="11.5">Ref: MP-00291847</text>'
+  +'<text x="32" y="170" fill="#333" font-size="11.5">Pay £2.99 redelivery fee:</text>'
+  +'<rect x="32" y="180" width="258" height="26" rx="6" fill="#f0f0f0"/>'
+  +'<text x="40" y="197" fill="#0066cc" font-size="10" font-family="monospace">myparcel-redelivery.co/pay</text>'
+  +'<text x="32" y="222" fill="#c0392b" font-size="11" font-weight="bold">⚠️ Return to sender if unpaid</text>'
+  +'<text x="280" y="250" text-anchor="end" fill="#aaa" font-size="10">08:55 AM ✓</text>'
+  +'</svg></div>';
+}
+
+function hmrc_sms(){
+  return '<div class="scam-img-card" role="img" aria-label="Screenshot of a fake HMRC tax refund SMS">'
+  +'<svg viewBox="0 0 390 280" xmlns="http://www.w3.org/2000/svg" font-family="Arial,sans-serif">'
+  +'<rect width="390" height="280" fill="#f2f2f7"/>'
+  +'<rect width="390" height="44" fill="#1a1a2e"/>'
+  +'<text x="16" y="28" fill="#fff" font-size="13" font-weight="bold">9:41</text>'
+  +'<text x="340" y="28" fill="#fff" font-size="12">📶 🔋</text>'
+  +'<rect y="44" width="390" height="52" fill="#fff"/>'
+  +'<circle cx="36" cy="70" r="18" fill="#27ae60"/>'
+  +'<text x="36" y="76" text-anchor="middle" font-size="16">🏛️</text>'
+  +'<text x="64" y="64" fill="#111" font-size="14" font-weight="bold">HMRC-Gov</text>'
+  +'<text x="64" y="82" fill="#888" font-size="11">SMS · Unknown sender</text>'
+  +'<text x="360" y="64" text-anchor="end" fill="#888" font-size="11">07:30</text>'
+  +'<rect x="16" y="108" width="290" height="142" rx="16" fill="#fff" stroke="#e0e0e0" stroke-width="1"/>'
+  +'<text x="32" y="132" fill="#111" font-size="12.5" font-weight="bold">💷 Tax Refund: £312.50</text>'
+  +'<text x="32" y="152" fill="#333" font-size="11.5">Verify your bank details to claim.</text>'
+  +'<rect x="32" y="164" width="258" height="26" rx="6" fill="#f0f0f0"/>'
+  +'<text x="40" y="181" fill="#0066cc" font-size="10" font-family="monospace">hmrc-taxrefund-claim.net/verify</text>'
+  +'<text x="32" y="210" fill="#c0392b" font-size="11" font-weight="bold">⏰ Expires 14 May. Act now.</text>'
+  +'<text x="280" y="240" text-anchor="end" fill="#aaa" font-size="10">07:30 AM ✓</text>'
+  +'</svg></div>';
+}
+
+
+var questions = [
+  {
+    id:1, type:'svg-bank', label:'SMS Message', answer:'fake',
+    clues:[
+      {icon:'🚩', text:'Banks NEVER send links by SMS'},
+      {icon:'🌐', text:'Fake domain — not a real bank site'},
+      {icon:'⏰', text:'"24 hours" = pressure tactic'}
+    ]
+  },
+  {
+    id:2, type:'email', label:'Email', answer:'real',
+    content:{
+      from:'noreply@amazon.com', to:'you@email.com',
+      subject:'Your order #112-4857291 has shipped',
+      body:'Hi,\n\nYour order is on its way!\n\nDelivery: Tue 12 May\nTracking: 1Z999AA10123456784\n\nVisit Your Orders on Amazon.com to track.\n\n— Amazon Team'
+    },
+    clues:[
+      {icon:'✅', text:'Official amazon.com domain'},
+      {icon:'📦', text:'Real tracking number format'},
+      {icon:'🔒', text:'No links asking for personal info'}
+    ]
+  },
+  {
+    id:3, type:'svg-lottery', label:'WhatsApp Message', answer:'fake',
+    clues:[
+      {icon:'🚩', text:'You never entered this lottery'},
+      {icon:'🎁', text:'Gift cards = untraceable = scam'},
+      {icon:'⏰', text:'"48 hours" = pressure tactic'}
+    ]
+  },
+  {
+    id:4, type:'email', label:'Email', answer:'fake',
+    content:{
+      from:'barrister.james.okonkwo@gmail.com', to:'undisclosed-recipients',
+      subject:'CONFIDENTIAL — Inheritance $8.5M USD',
+      body:'Dear Beloved,\n\nMy late client left $8,500,000 USD. You are entitled to 40%.\n\nSend $500 processing fee to release funds.\n\nReply urgently.\n\n— Barrister James Okonkwo'
+    },
+    clues:[
+      {icon:'🚩', text:'Real solicitors don\'t use Gmail'},
+      {icon:'💸', text:'Upfront "fee" = the actual scam'},
+      {icon:'🌍', text:'Classic "419" inheritance fraud'}
+    ]
+  },
+  {
+    id:5, type:'svg-parcel', label:'SMS Message', answer:'fake',
+    clues:[
+      {icon:'🚩', text:'Couriers never charge fees by SMS'},
+      {icon:'🌐', text:'Not an official courier domain'},
+      {icon:'💳', text:'Never pay via a link in a text'}
+    ]
+  },
+  {
+    id:6, type:'email', label:'Email', answer:'real',
+    content:{
+      from:'security@paypal.com', to:'customer@email.com',
+      subject:'Receipt: $249.99 to TechStore Inc.',
+      body:'Hi,\n\nYou sent $249.99 to TechStore Inc.\n\nTransaction: 7XB29301KH482910W\nDate: 9 May 2026\n\nDispute via PayPal Resolution Centre if needed.\n\n— PayPal'
+    },
+    clues:[
+      {icon:'✅', text:'Official paypal.com domain'},
+      {icon:'🔢', text:'Real transaction ID format'},
+      {icon:'🔒', text:'Links only to PayPal\'s own site'}
+    ]
+  },
+  {
+    id:7, type:'svg-hmrc', label:'SMS Message', answer:'fake',
+    clues:[
+      {icon:'🚩', text:'HMRC never texts about refunds'},
+      {icon:'🌐', text:'Not a .gov.uk domain'},
+      {icon:'🏦', text:'Never give bank details via SMS'}
+    ]
+  }
+];
+
+var current_idx=0, score=0;
+var answers=new Array(questions.length).fill(null);
+
+function start_quiz(){
+  document.getElementById('home-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='flex';
+  document.getElementById('score-display').style.display='block';
+  render_ques();
+}
+
+
+function render_ques(){
+  var q=questions[current_idx], total=questions.length;
+  document.getElementById('question-counter').textContent='Question '+(current_idx+1)+' of '+total;
+  var pct=((current_idx+1)/total)*100;
+  var fill=document.getElementById('progress-fill');
+  fill.style.width=pct+'%';
+  fill.parentElement.setAttribute('aria-valuenow',current_idx+1);
+  document.getElementById('card-label').textContent='Is this '+q.label.toLowerCase()+' real or fake?';
+
+  var c=document.getElementById('message-content');
+  if(q.type==='svg-bank')    c.innerHTML=bank_sms();
+  else if(q.type==='svg-lottery') c.innerHTML=lottery_msg();
+  else if(q.type==='svg-parcel')  c.innerHTML=parcel_sms();
+  else if(q.type==='svg-hmrc')    c.innerHTML=hmrc_sms();
+  else if(q.type==='email')  c.innerHTML=emailHTML(q.content);
+  else c.innerHTML=smsHTML(q.content);
+
+  var answered=answers[current_idx]!==null;
+  document.getElementById('btn-real').disabled=answered;
+  document.getElementById('btn-fake').disabled=answered;
+  document.getElementById('btn-prev').disabled=current_idx===0;
+  document.getElementById('btn-next').disabled=!answered||current_idx===total-1;
+  document.getElementById('score-display').textContent='Score: '+score+'/'+total;
+}
+
+function ans_submit(choice){
+  var q=questions[current_idx], ok=choice===q.answer;
+  if(answers[current_idx]===null){answers[current_idx]=choice;if(ok)score++;}
+  document.getElementById('btn-real').disabled=true;
+  document.getElementById('btn-fake').disabled=true;
+  show_feedback(ok, q.clues);
+}
+
+function show_feedback(ok, clues){
+  var banner = document.getElementById('dialog-banner');
+  var icon   = document.getElementById('dialog-icon');
+  var title  = document.getElementById('dialog-title');
+  var cluesEl= document.getElementById('dialog-clues');
+
+  icon.textContent  = ok ? '🎉' : '😟';
+  title.textContent = ok ? 'Good job!' : 'Oh no, not right!';
+  title.className   = 'dialog-title ' + (ok ? 'correct' : 'wrong');
+  banner.className  = 'dialog-banner ' + (ok ? 'correct' : 'wrong');
+
+ 
+  cluesEl.innerHTML = clues.map(function(c){
+    return '<div class="clue-row">'
+      + '<span class="clue-icon" aria-hidden="true">'+c.icon+'</span>'
+      + '<span class="clue-text">'+c.text+'</span>'
+      + '</div>';
+  }).join('');
+
+  document.getElementById('feedback-dialog').classList.add('visible');
+  setTimeout(function(){document.getElementById('btn-continue').focus();},50);
+}
+function closeFeedback(){
+  document.getElementById('feedback-dialog').classList.remove('visible');
+  var last=current_idx===questions.length-1;
+  var all=answers.every(function(a){return a!==null;});
+  if(last&&all) showResults();
+  else if(!last) navigate(1);
+}
+
+
+function navigate(d){
+  var n=current_idx+d;
+  if(n<0||n>=questions.length)return;
+  current_idx=n; render_ques();
+}
+
+function showResults(){
+  document.getElementById('quiz-screen').style.display='none';
+  document.getElementById('results-screen').style.display='flex';
+  document.getElementById('results-score').textContent=score+' / '+questions.length;
+  document.getElementById('score-display').textContent='Score: '+score+'/'+questions.length;
+  var t,m;
+  if(score===7){t='🏆';m='Perfect! You\'re a scam-spotting expert.';}
+  else if(score>=5){t='🥈';m='Great work! Review the ones you missed.';}
+  else if(score>=3){t='🤔';m='Not bad — read the explanations and try again.';}
+  else{t='📚';m='Scams are tricky! Read each explanation and retry.';}
+  document.getElementById('results-trophy').textContent=t;
+  document.getElementById('results-message').textContent=m;
+}
+
+function restart_quiz(){
+  current_idx=0;score=0;answers=new Array(questions.length).fill(null);
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('score-display').style.display='none';
+  document.getElementById('home-screen').style.display='flex';
+}
+
+document.getElementById('feedback-dialog').addEventListener('keydown',function(e){if(e.key==='Escape')closeFeedback();});
+document.getElementById('settings-overlay').addEventListener('keydown',function(e){if(e.key==='Escape')closeSettings();});
+</script>
+</body>
+</html>
