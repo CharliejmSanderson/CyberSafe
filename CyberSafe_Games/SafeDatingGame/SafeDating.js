@@ -1,21 +1,4 @@
-// ============================================================
-//  SafeDating.js
-//  Game logic for the Safe Online Dating game.
-//
-//  Reads from the `levels` array in SafeDating_levels.js
-//  which must be loaded before this file in the HTML.
-//
-//  PROGRESS NOTE:
-//  `unlockedLevel` starts at 0 (first level unlocked).
-//  When connecting to the wider app, replace this variable
-//  with the value from the user's account, and call your
-//  save function wherever saveProgress() is called below.
-// ============================================================
-
-
-// ------------------------------------------------------------
-//  GAME STATE
-// ------------------------------------------------------------
+/* GAME STATE */
 
 let unlockedLevel    = 0;   // Replace with user account data when app is ready
 let currentLevel     = 0;
@@ -25,10 +8,7 @@ let waitingForReply  = false; // true while the typing indicator is showing
 let shownMessages    = [];    // { type: 'them' | 'me', text: string }
 
 
-// ------------------------------------------------------------
-//  PROGRESS
-//  Replace the body of this function to save to the user account
-// ------------------------------------------------------------
+/* PROGRESS */
 
 function saveProgress(newLevel) {
   if (newLevel > unlockedLevel) {
@@ -37,21 +17,95 @@ function saveProgress(newLevel) {
   }
 }
 
+/* HELPER */
 
-// ------------------------------------------------------------
-//  HELPER
-// ------------------------------------------------------------
 
 function setScreen(html) {
   document.getElementById('screen').innerHTML = html;
 }
 
+/*  SETTINGS */
 
-// ============================================================
-//  HOME SCREEN
-// ============================================================
+
+function openSettings() {
+  document.getElementById('settingsOverlay').classList.add('active');
+}
+
+function closeSettings() {
+  document.getElementById('settingsOverlay').classList.remove('active');
+}
+
+document.getElementById('settingsOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeSettings();
+});
+
+function setTheme(theme, btn) {
+  const phone = document.getElementById('phone');
+
+  phone.classList.remove('theme-dark', 'theme-light', 'theme-blueyellow');
+  if (theme !== 'default') phone.classList.add('theme-' + theme);
+
+  document.querySelectorAll('#settingsOverlay .setting-option[id^="theme-"]')
+    .forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setTextSize(btn) {
+  const scale = btn.dataset.scale;
+  document.documentElement.style.setProperty('--font-scale', scale);
+
+  document.querySelectorAll('#settingsOverlay .size-grid .setting-option')
+    .forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function handleTtsToggle() {
+  if (!isTtsOn()) stopSpeech();
+}
+
+function isTtsOn() {
+  const toggle = document.getElementById('ttsToggle');
+  return toggle ? toggle.checked : false;
+}
+
+
+
+/* TEXT TO SPEECH */
+
+
+function speakText(text) {
+  if (!('speechSynthesis' in window)) return;
+
+  const utterance   = new SpeechSynthesisUtterance(text);
+  utterance.lang    = 'en-AU';
+  utterance.rate    = 0.85;
+  utterance.pitch   = 1;
+  utterance.volume  = 1;
+
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
+function stopSpeech() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+function speakBubble(text) {
+  speakText(text);
+}
+
+function speakChoice(text) {
+  speakText(text);
+}
+
+
+/* HOME SCREEN */
+
 
 function showHome() {
+  stopSpeech();
   currentStep      = 0;
   conversationDone = false;
   waitingForReply  = false;
@@ -97,15 +151,10 @@ function showHome() {
 }
 
 
-// ============================================================
-//  CHAT SCREEN
-//
-//  The entire screen scrolls as one unit.
-//  The chat header, messages, choices, and flag buttons
-//  all live in one scrollable column inside #screen.
-// ============================================================
+/* CHAT SCREEN */
 
 function startLevel(idx) {
+  stopSpeech();
   currentLevel     = idx;
   currentStep      = 0;
   conversationDone = false;
@@ -121,28 +170,53 @@ function renderChat() {
   const lv   = levels[currentLevel];
   const step = lv.conversation[currentStep];
 
-  // --- Chat bubbles ---
-  const bubblesHTML = shownMessages.map(m =>
-    `<div class="bubble ${m.type === 'them' ? 'them' : 'me'}">${m.text}</div>`
-  ).join('');
+  /* Chat bubbles */ 
 
-  // --- Reply choices ---
-  // Hidden while waiting for the character's reply or after conversation ends
+  const bubblesHTML = shownMessages.map(m => {
+    if (m.type === 'them') {
+      const escaped = m.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      return `
+        <div class="bubble-row them">
+          <div class="bubble them">${m.text}</div>
+          <button class="bubble-speak-btn"
+                  onclick="speakBubble('${escaped}')"
+                  aria-label="Read this message aloud">
+            &#128266;
+          </button>
+        </div>`;
+    } else {
+      return `
+        <div class="bubble-row me">
+          <div class="bubble me">${m.text}</div>
+        </div>`;
+    }
+  }).join('');
+
+  /* Reply choices */
+
   let choicesHTML = '';
   if (!conversationDone && !waitingForReply && step && step.choices) {
-    const btns = step.choices.map((c, i) =>
-      `<button class="choice-btn" onclick="pickChoice(${i})">${c.text}</button>`
-    ).join('');
+    const rows = step.choices.map((c, i) => {
+      const escaped = c.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      return `
+        <div class="choice-row">
+          <button class="choice-speak-btn"
+                  onclick="speakChoice('${escaped}')"
+                  aria-label="Hear this option">
+            &#128266;
+          </button>
+          <button class="choice-btn" onclick="pickChoice(${i})">${c.text}</button>
+        </div>`;
+    }).join('');
 
     choicesHTML = `
       <div class="choices-area">
         <div class="choices-label">Choose your reply</div>
-        ${btns}
+        ${rows}
       </div>`;
   }
 
-  // --- Flag buttons ---
-  // Disabled until the conversation ends
+  /* Flag buttons */
   const ready        = conversationDone;
   const disabledAttr = ready ? '' : 'disabled';
   const flagLabel    = ready ? 'What do you think?' : 'Read the chat first';
@@ -189,7 +263,6 @@ function renderChat() {
     ${flagHTML}
   `);
 
-  // Scroll to the bottom of the screen to show latest content
   const screen = document.getElementById('screen');
   if (screen) screen.scrollTop = screen.scrollHeight;
 }
@@ -200,12 +273,12 @@ function addMessage() {
   const step = lv.conversation[currentStep];
   if (!step) return;
 
-  // Only add a bubble if there is text to show
   if (step.them) {
     shownMessages.push({ type: 'them', text: step.them });
+
+    if (isTtsOn()) speakText(step.them);
   }
 
-  // No choices means end of conversation
   if (!step.choices) {
     conversationDone = true;
   }
@@ -215,21 +288,20 @@ function addMessage() {
 
 
 function pickChoice(choiceIdx) {
+  stopSpeech();
+
   const lv     = levels[currentLevel];
   const step   = lv.conversation[currentStep];
   const choice = step.choices[choiceIdx];
 
-  // Show the player's chosen reply
   shownMessages.push({ type: 'me', text: choice.text });
 
-  // Advance step and block choices while waiting for the reply
   currentStep     = choice.next;
   waitingForReply = true;
   renderChat();
 
-  // Show typing indicator then character's reply
   setTimeout(() => {
-    const screen = document.getElementById('screen');
+    const screen  = document.getElementById('screen');
     const msgArea = screen ? screen.querySelector('.chat-messages') : null;
 
     if (msgArea) {
@@ -241,19 +313,18 @@ function pickChoice(choiceIdx) {
     }
 
     setTimeout(() => {
-      // Remove typing indicator
       const msgArea2 = document.getElementById('screen').querySelector('.chat-messages');
       if (msgArea2) {
         const indicator = msgArea2.querySelector('.typing');
         if (indicator) indicator.remove();
       }
 
-      // Add the character's reply to this choice as a bubble
       if (choice.reply) {
         shownMessages.push({ type: 'them', text: choice.reply });
+
+        if (isTtsOn()) speakText(choice.reply);
       }
 
-      // Unblock and move to next step
       waitingForReply = false;
       addMessage();
 
@@ -262,14 +333,11 @@ function pickChoice(choiceIdx) {
   }, 200);
 }
 
+/* FLAG SUBMISSION */
 
-// ============================================================
-//  FLAG SUBMISSION
-// ============================================================
 
 function submitFlag(playerChoice) {
-  // playerChoice is the string 'green', 'red', or 'yellow'
-  // lv.flag is 'green', 'red', 'yellow-red', or 'yellow-green'
+  stopSpeech();
 
   const lv   = levels[currentLevel];
   const flag = lv.flag;
@@ -297,31 +365,24 @@ function submitFlag(playerChoice) {
   showResult(result, playerChoice);
 }
 
-
-// ============================================================
-//  RESULT SCREEN
-// ============================================================
+/*  RESULT SCREEN */
 
 function showResult(result, playerChoice) {
   const lv     = levels[currentLevel];
   const isLast = currentLevel >= levels.length - 1;
 
-  // Unlock next level on correct or close
   if (result === 'correct' || result === 'close') {
     saveProgress(currentLevel + 1);
   }
 
-  // Label for the player's choice
   const choiceLabel = playerChoice === 'green'  ? '&#127937; Green Flag'
                     : playerChoice === 'red'     ? '&#128681; Red Flag'
                     :                              '&#9888;&#65039; Not Sure';
 
-  // Label for the correct answer
   const correctLabel = lv.flag === 'green'   ? '&#127937; Green Flag'
                      : lv.flag === 'red'      ? '&#128681; Red Flag'
                      :                          '&#9888;&#65039; Not Sure';
 
-  // Icon and heading for each outcome
   const icon  = result === 'correct' ? '&#127881;'
               : result === 'close'   ? '&#129300;'
               :                        '&#128532;';
@@ -330,7 +391,6 @@ function showResult(result, playerChoice) {
               : result === 'close'   ? 'Almost!'
               :                        'Not quite...';
 
-  // Pick the right explanation
   let explanationText;
   if (result === 'correct') {
     explanationText = lv.flag.startsWith('yellow')
@@ -342,7 +402,10 @@ function showResult(result, playerChoice) {
     explanationText = lv.explanation;
   }
 
-  // Action buttons
+  if (isTtsOn()) {
+    speakText(title + '. ' + explanationText);
+  }
+
   let actionsHTML = '';
 
   if (result === 'correct') {
@@ -352,7 +415,6 @@ function showResult(result, playerChoice) {
       : `<button class="action-btn primary"   onclick="showHome()">Back to Levels &#127968;</button>`;
 
   } else if (result === 'close') {
-    // Recommended retry but not forced
     const nextAction = !isLast
       ? `<button class="action-btn secondary" onclick="startLevel(${currentLevel + 1})">Move On &#8250;</button>`
       : `<button class="action-btn secondary" onclick="showHome()">Back to Levels</button>`;
@@ -362,7 +424,6 @@ function showResult(result, playerChoice) {
       ${nextAction}`;
 
   } else {
-    // Wrong: must retry
     actionsHTML = `
       <button class="action-btn primary"   onclick="startLevel(${currentLevel})">Try Again &#8617;</button>
       <button class="action-btn secondary" onclick="showHome()">Back to Levels</button>`;
