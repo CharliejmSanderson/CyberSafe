@@ -310,6 +310,13 @@ body.theme-blueyellow .card ul {
   font-weight: bold;
 }
 
+body.theme-blueyellow .good-text   { color: #4dff91; }
+body.theme-blueyellow .medium-text { color: #ffd400; }
+body.theme-blueyellow .weak-text   { color: #ff6b6b; }
+body.theme-dark .good-text         { color: #4dff91; }
+body.theme-dark .medium-text       { color: #ffd400; }
+body.theme-dark .weak-text         { color: #ff6b6b; }
+
 /* MODAL */
 
 .modal {
