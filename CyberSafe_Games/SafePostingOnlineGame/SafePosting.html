@@ -186,6 +186,102 @@ h2{
     border-color:yellow;
 }
 
+/* SETTINGS MODAL */
+.settings-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    z-index:100;
+}
+
+.settings-overlay.active{
+    display:flex;
+}
+
+.settings-sheet{
+    background:#f4f0ff;
+    border-top:3px solid #4b2e83;
+    border-radius:25px 25px 0 0;
+    padding:25px 20px 35px;
+    width:100%;
+    max-width:540px;
+    max-height:85vh;
+    overflow-y:auto;
+    position:relative;
+}
+
+.settings-modal-title{
+    font-size:22px;
+    font-weight:bold;
+    color:#4b2e83;
+    margin-bottom:16px;
+}
+
+.settings-section-label{
+    font-size:13px;
+    font-weight:bold;
+    color:#888;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin:14px 0 8px;
+}
+
+.settings-btn{
+    width:100%;
+    padding:14px;
+    border:2px solid #4b2e83;
+    border-radius:14px;
+    background:white;
+    color:#4b2e83;
+    font-size:16px;
+    font-weight:bold;
+    text-align:left;
+    cursor:pointer;
+    margin-bottom:8px;
+}
+
+.settings-btn:last-child{ margin-bottom:0; }
+
+.settings-size-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-bottom:8px;
+}
+
+.settings-done-btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    background:#4b2e83;
+    color:white;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:14px;
+}
+
+.settings-close-btn{
+    position:absolute;
+    top:14px;
+    right:14px;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    border:none;
+    background:#ddd;
+    color:#333;
+    font-size:16px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
 </style>
 </head>
 
@@ -193,6 +289,33 @@ h2{
 
 <div class="phone">
     <div id="screen"></div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-sheet">
+
+    <button class="settings-close-btn" onclick="closeSettings()">&#215;</button>
+    <div class="settings-modal-title">Settings</div>
+
+    <div class="settings-section-label">Theme</div>
+    <button class="settings-btn" onclick="setTheme('normal')">&#127800; Default</button>
+    <button class="settings-btn" onclick="setTheme('dark')">&#127761; Dark</button>
+    <button class="settings-btn" onclick="setTheme('contrast-dark')">&#9899; High Contrast Dark</button>
+    <button class="settings-btn" onclick="setTheme('contrast-light')">&#9898; High Contrast Light</button>
+    <button class="settings-btn" onclick="setTheme('blue-yellow')">&#128309; Blue &amp; Yellow</button>
+
+    <div class="settings-section-label">Text Size</div>
+    <div class="settings-size-grid">
+      <button class="settings-btn" onclick="setTextSize('small')">Small</button>
+      <button class="settings-btn" onclick="setTextSize('medium')">Medium</button>
+      <button class="settings-btn" onclick="setTextSize('large')">Large</button>
+      <button class="settings-btn" onclick="setTextSize('xlarge')">Extra Large</button>
+    </div>
+
+    <button class="settings-done-btn" onclick="closeSettings()">Done</button>
+
+  </div>
 </div>
 
 <script src="SafePosting.js"></script>
