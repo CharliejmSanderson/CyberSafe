@@ -1,11 +1,11 @@
 /* GAME STATE */
 
-let unlockedLevel    = 0;   // Replace with user account data when app is ready
+let unlockedLevel    = 0;  
 let currentLevel     = 0;
 let currentStep      = 0;
 let conversationDone = false;
-let waitingForReply  = false; // true while the typing indicator is showing
-let shownMessages    = [];    // { type: 'them' | 'me', text: string }
+let waitingForReply  = false; 
+let shownMessages    = [];    
 
 
 /* PROGRESS */
@@ -13,7 +13,6 @@ let shownMessages    = [];    // { type: 'them' | 'me', text: string }
 function saveProgress(newLevel) {
   if (newLevel > unlockedLevel) {
     unlockedLevel = newLevel;
-    // TODO: save `unlockedLevel` to the user's account here
   }
 }
 
@@ -25,12 +24,14 @@ function setScreen(html) {
 }
 
 function setBackBtn(action) {
-  const btn = document.querySelector('.topbar .topbar-btn');
+  const btn = document.getElementById('backBtn');
   if (!btn) return;
   if (action === 'menu') {
+    btn.innerHTML = '&#127968;';
     btn.setAttribute('aria-label', 'Back to main menu');
     btn.onclick = () => { window.location.href = '../MainMenu/mainmenu.html'; };
   } else {
+    btn.innerHTML = '&#8592;';
     btn.setAttribute('aria-label', 'Back to level select');
     btn.onclick = showHome;
   }
@@ -52,10 +53,8 @@ document.getElementById('settingsOverlay').addEventListener('click', function(e)
 });
 
 function setTheme(theme, btn) {
-  const phone = document.getElementById('phone');
-
-  phone.classList.remove('theme-dark', 'theme-light', 'theme-blueyellow');
-  if (theme !== 'default') phone.classList.add('theme-' + theme);
+  document.body.classList.remove('theme-dark', 'theme-light', 'theme-blueyellow');
+  if (theme !== 'default') document.body.classList.add('theme-' + theme);
 
   document.querySelectorAll('#settingsOverlay .setting-option[id^="theme-"]')
     .forEach(b => b.classList.remove('active'));
@@ -384,7 +383,6 @@ function submitFlag(playerChoice) {
 function showResult(result, playerChoice) {
   const lv     = levels[currentLevel];
   const isLast = currentLevel >= levels.length - 1;
-  setBackBtn('home');
 
   if (result === 'correct' || result === 'close') {
     saveProgress(currentLevel + 1);
