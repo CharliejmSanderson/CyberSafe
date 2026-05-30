@@ -1,3 +1,3 @@
 setTimeout(() => {
-  window.location.href = "mainmenu.html";
+    window.location.href = "../MainMenu/mainmenu.html";
 }, 3500);
