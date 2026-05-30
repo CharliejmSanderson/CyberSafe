@@ -7,13 +7,10 @@
 
   <style>
 
-    /*
-       CSS VARIABLES - DEFAULT THEME
-    */
+    /* CSS VARIABLES - DEFAULT THEME */
 
     :root {
       --bg:              #ffffff;
-      --bg-screen:       #d9d9d9;
       --topbar:          #d49a6a;
       --topbar-text:     #ffffff;
       --chat-header-bg:  #4b5d57;
@@ -58,12 +55,9 @@
       --font-scale: 1;
     }
 
+    /* THEME - HIGH CONTRAST DARK */
 
-    /*
-       THEME - HIGH CONTRAST DARK
-    */
-
-    .phone.theme-dark {
+    body.theme-dark {
       --bg:              #121212;
       --chat-bg:         #1a1a1a;
       --bubble-them-bg:  #2c2c2c;
@@ -101,12 +95,9 @@
       --setting-active-text:  #000000;
     }
 
+    /* THEME - HIGH CONTRAST LIGHT */
 
-    /*
-       THEME - HIGH CONTRAST LIGHT
-    */
-
-    .phone.theme-light {
+    body.theme-light {
       --topbar:          #1976d2;
       --chat-header-bg:  #1976d2;
       --choice-border:   #1976d2;
@@ -118,12 +109,9 @@
       --setting-active-bg:    #1976d2;
     }
 
+    /* THEME - BLUE-YELLOW ACCESSIBLE */
 
-    /*
-       THEME - BLUE-YELLOW ACCESSIBLE
-    */
-
-    .phone.theme-blueyellow {
+    body.theme-blueyellow {
       --bg:              #0d2b45;
       --chat-bg:         #0a2236;
       --topbar:          #ffd600;
@@ -165,10 +153,7 @@
       --setting-active-text:  #000000;
     }
 
-
-    /* 
-       BASE
-    */
+    /* BASE */
 
     * {
       box-sizing: border-box;
@@ -181,36 +166,12 @@
     }
 
     body {
-      background: var(--bg-screen);
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 20px 0;
-    }
-
-
-    /* 
-       PHONE SHELL
-    */
-
-    .phone {
-      width: 360px;
-      height: 640px;
       background: var(--bg);
-      border-radius: 25px;
-      overflow: hidden;
-      box-shadow: 0 0 24px rgba(0, 0, 0, 0.25);
-      display: flex;
-      flex-direction: column;
-      position: relative;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
     }
 
-
-    /* 
-       TOPBAR
-    */
+    /* TOPBAR */
 
     .topbar {
       background: var(--topbar);
@@ -221,7 +182,12 @@
       font-weight: bold;
       font-size: 1rem;
       color: var(--topbar-text);
-      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      width: 100%;
     }
 
     .topbar-btn {
@@ -239,23 +205,17 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
-
-    /*
-       SCREEN
-    */
+    /* SCREEN */
 
     #screen {
-      flex: 1;
-      min-height: 0;
+      margin-top: 46px;
+      min-height: calc(100vh - 46px);
       overflow-y: auto;
       display: flex;
       flex-direction: column;
     }
 
-
-    /*
-       HOME SCREEN
-    */
+    /* HOME SCREEN */
 
     .home-header {
       background: linear-gradient(135deg, var(--home-header-bg1) 0%, var(--home-header-bg2) 100%);
@@ -372,10 +332,7 @@
       flex-shrink: 0;
     }
 
-
-    /*
-       CHAT SCREEN - contact header
-    */
+    /* CHAT SCREEN - contact header */
 
     .chat-header {
       background: var(--chat-header-bg);
@@ -409,10 +366,7 @@
       opacity: 0.8;
     }
 
-
-    /*
-       CHAT SCREEN - message bubbles
-    */
+    /* CHAT SCREEN - message bubbles */
 
     .chat-messages {
       background: var(--chat-bg);
@@ -492,10 +446,7 @@
       letter-spacing: 2px;
     }
 
-
-    /* 
-       CHAT SCREEN - reply choices
-    */
+    /* CHAT SCREEN - reply choices */
 
     .choices-area {
       background: var(--panel-bg);
@@ -565,10 +516,7 @@
 
     .choice-btn:active { transform: scale(0.98); }
 
-
-    /*
-       CHAT SCREEN - flag buttons
-    */
+    /* CHAT SCREEN - flag buttons */
 
     .flag-area {
       background: var(--panel-bg);
@@ -636,10 +584,7 @@
       transform: none;
     }
 
-
-    /*
-       RESULT SCREEN 
-    */
+    /* RESULT SCREEN */
 
     .result-screen {
       flex: 1;
@@ -736,13 +681,10 @@
       border: 2px solid var(--level-unlocked-border);
     }
 
-
-    /*
-       SETTINGS MODAL
-    */
+    /* SETTINGS MODAL */
 
     .settings-overlay {
-      position: absolute;
+      position: fixed;
       inset: 0;
       background: var(--modal-overlay);
       display: none;
@@ -899,73 +841,70 @@
 </head>
 
 <body>
-  <div class="phone" id="phone">
 
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <button class="topbar-btn" onclick="window.location.href='../MainMenu/mainmenu.html'" aria-label="Back to main menu">&#8592;</button>
-      <span>Safe Online Dating</span>
-      <button class="topbar-btn" onclick="openSettings()" aria-label="Settings">&#9881;&#65039;</button>
-    </div>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <button class="topbar-btn" id="backBtn" aria-label="Back to main menu">&#127968;</button>
+    <span>Safe Online Dating</span>
+    <button class="topbar-btn" onclick="openSettings()" aria-label="Settings">&#9881;&#65039;</button>
+  </div>
 
-    <!-- SCREEN -->
-    <div id="screen"></div>
+  <!-- SCREEN -->
+  <div id="screen"></div>
 
-    <!-- SETTTINGS MODAL -->
-    <div class="settings-overlay" id="settingsOverlay" role="dialog" aria-modal="true" aria-label="Settings">
-      <div class="settings-box">
+  <!-- SETTINGS MODAL -->
+  <div class="settings-overlay" id="settingsOverlay" role="dialog" aria-modal="true" aria-label="Settings">
+    <div class="settings-box">
 
-        <button class="settings-close-btn" onclick="closeSettings()" aria-label="Close settings">&#215;</button>
-        <div class="settings-title">Settings</div>
+      <button class="settings-close-btn" onclick="closeSettings()" aria-label="Close settings">&#215;</button>
+      <div class="settings-title">Settings</div>
 
-        <!-- THEME -->
-        <div class="settings-section">Theme</div>
+      <!-- THEME -->
+      <div class="settings-section">Theme</div>
 
-        <button class="setting-option active" id="theme-default"
-                onclick="setTheme('default', this)">
-          Default
-        </button>
-        <button class="setting-option" id="theme-dark"
-                onclick="setTheme('dark', this)">
-          High Contrast Dark
-        </button>
-        <button class="setting-option" id="theme-light"
-                onclick="setTheme('light', this)">
-          High Contrast Light
-        </button>
-        <button class="setting-option" id="theme-blueyellow"
-                onclick="setTheme('blueyellow', this)">
-          Blue-Yellow Accessible
-        </button>
+      <button class="setting-option active" id="theme-default"
+              onclick="setTheme('default', this)">
+        Default
+      </button>
+      <button class="setting-option" id="theme-dark"
+              onclick="setTheme('dark', this)">
+        High Contrast Dark
+      </button>
+      <button class="setting-option" id="theme-light"
+              onclick="setTheme('light', this)">
+        High Contrast Light
+      </button>
+      <button class="setting-option" id="theme-blueyellow"
+              onclick="setTheme('blueyellow', this)">
+        Blue-Yellow Accessible
+      </button>
 
-        <!-- TEXT SIZE -->
-        <div class="settings-section">Text Size</div>
+      <!-- TEXT SIZE -->
+      <div class="settings-section">Text Size</div>
 
-        <div class="size-grid">
-          <button class="setting-option" data-scale="0.85"
-                  onclick="setTextSize(this)">Small</button>
-          <button class="setting-option active" data-scale="1"
-                  onclick="setTextSize(this)">Medium</button>
-          <button class="setting-option" data-scale="1.2"
-                  onclick="setTextSize(this)">Large</button>
-          <button class="setting-option" data-scale="1.4"
-                  onclick="setTextSize(this)">Extra Large</button>
-        </div>
-
-        <!-- TEXT TO SPEECH -->
-        <div class="settings-section">Accessibility</div>
-
-        <div class="tts-toggle-row">
-          <span class="tts-toggle-label">&#128266; Read messages aloud</span>
-          <label class="toggle-switch" aria-label="Enable text to speech">
-            <input type="checkbox" id="ttsToggle" onchange="handleTtsToggle()">
-            <span class="toggle-track"></span>
-          </label>
-        </div>
-
+      <div class="size-grid">
+        <button class="setting-option" data-scale="0.85"
+                onclick="setTextSize(this)">Small</button>
+        <button class="setting-option active" data-scale="1"
+                onclick="setTextSize(this)">Medium</button>
+        <button class="setting-option" data-scale="1.2"
+                onclick="setTextSize(this)">Large</button>
+        <button class="setting-option" data-scale="1.4"
+                onclick="setTextSize(this)">Extra Large</button>
       </div>
-    </div>
 
+      <!-- TEXT TO SPEECH -->
+      <div class="settings-section">Accessibility</div>
+
+      <div class="tts-toggle-row">
+        <span class="tts-toggle-label">&#128266; Read messages aloud</span>
+        <label class="toggle-switch" aria-label="Enable text to speech">
+          <input type="checkbox" id="ttsToggle" onchange="handleTtsToggle()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+
+    </div>
   </div>
 
   <script src="SafeDating_levels.js"></script>
