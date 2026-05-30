@@ -24,6 +24,18 @@ function setScreen(html) {
   document.getElementById('screen').innerHTML = html;
 }
 
+function setBackBtn(action) {
+  const btn = document.querySelector('.topbar .topbar-btn');
+  if (!btn) return;
+  if (action === 'menu') {
+    btn.setAttribute('aria-label', 'Back to main menu');
+    btn.onclick = () => { window.location.href = '../MainMenu/mainmenu.html'; };
+  } else {
+    btn.setAttribute('aria-label', 'Back to level select');
+    btn.onclick = showHome;
+  }
+}
+
 /*  SETTINGS */
 
 
@@ -106,6 +118,7 @@ function speakChoice(text) {
 
 function showHome() {
   stopSpeech();
+  setBackBtn('menu');
   currentStep      = 0;
   conversationDone = false;
   waitingForReply  = false;
@@ -155,6 +168,7 @@ function showHome() {
 
 function startLevel(idx) {
   stopSpeech();
+  setBackBtn('home');
   currentLevel     = idx;
   currentStep      = 0;
   conversationDone = false;
@@ -370,6 +384,7 @@ function submitFlag(playerChoice) {
 function showResult(result, playerChoice) {
   const lv     = levels[currentLevel];
   const isLast = currentLevel >= levels.length - 1;
+  setBackBtn('home');
 
   if (result === 'correct' || result === 'close') {
     saveProgress(currentLevel + 1);
@@ -453,6 +468,7 @@ function showResult(result, playerChoice) {
 }
 
 
-
-/* START THE GAME */
+// ============================================================
+//  START THE GAME
+// ============================================================
 showHome();
