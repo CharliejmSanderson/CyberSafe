@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Safe Posting Online</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#f7d6d6;
+    font-family:Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+/* PHONE */
+.phone{
+    width:390px;
+    min-height:720px;
+    background:white;
+    border-radius:30px;
+    overflow:hidden;
+    box-shadow:0 0 25px rgba(0,0,0,0.2);
+}
+
+/* TOPBAR */
+.topbar{
+    background:#4b2e83;
+    color:white;
+    padding:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.topbar span{
+    cursor:pointer;
+}
+
+/* CONTENT */
+.content{
+    padding:25px;
+    text-align:center;
+}
+
+h1{
+    font-size:28px;
+    color:#4b2e83;
+}
+
+h2{
+    font-size:24px;
+}
+
+/* PROGRESS BAR */
+.progress-box{
+    background:#eee;
+    height:18px;
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:20px;
+}
+
+.progress{
+    height:100%;
+    background:#66bb6a;
+    width:0%;
+}
+
+/* CARD */
+.card{
+    background:#f4f0ff;
+    border:3px solid #4b2e83;
+    border-radius:25px;
+    padding:35px 20px;
+    margin-top:20px;
+    margin-bottom:25px;
+    font-size:28px;
+    font-weight:bold;
+    color:#222;
+}
+
+/* BUTTONS */
+.answer-btn{
+    width:100%;
+    padding:22px;
+    border:none;
+    border-radius:20px;
+    font-size:24px;
+    font-weight:bold;
+    margin-bottom:18px;
+    cursor:pointer;
+}
+
+.safe-btn{
+    background:#4caf50;
+    color:white;
+}
+
+.unsafe-btn{
+    background:#e53935;
+    color:white;
+}
+
+.next-btn{
+    background:#1e88e5;
+    color:white;
+    width:100%;
+    padding:18px;
+    border:none;
+    border-radius:20px;
+    font-size:22px;
+    margin-top:25px;
+    cursor:pointer;
+}
+
+/* RESULT */
+.result-title{
+    font-size:38px;
+    font-weight:bold;
+    margin-top:20px;
+}
+
+.good{
+    color:#2e7d32;
+}
+
+.bad{
+    color:#c62828;
+}
+
+/* BADGES */
+.badge{
+    background:#f4f0ff;
+    border:2px solid #4b2e83;
+    border-radius:18px;
+    padding:14px;
+    margin-top:12px;
+    font-size:20px;
+}
+
+/* SETTINGS */
+.setting-option{
+    background:#f4f0ff;
+    border:2px solid #4b2e83;
+    border-radius:18px;
+    padding:18px;
+    margin-top:15px;
+    font-size:22px;
+    cursor:pointer;
+}
+
+/* DARK THEME */
+.phone.dark-theme{
+    background:#121212;
+    color:white;
+}
+
+.phone.dark-theme .card{
+    background:#1f1f1f;
+    color:white;
+}
+
+.phone.dark-theme .topbar{
+    background:black;
+}
+
+/* HIGH CONTRAST */
+.phone.high-contrast{
+    background:black;
+    color:yellow;
+}
+
+.phone.high-contrast .topbar{
+    background:yellow;
+    color:black;
+}
+
+.phone.high-contrast .card{
+    background:black;
+    color:yellow;
+    border-color:yellow;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="phone">
+    <div id="screen"></div>
+</div>
+
+<script src="SafePosting.js"></script>
+
+</body>
+</html>
