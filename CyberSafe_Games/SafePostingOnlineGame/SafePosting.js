@@ -49,7 +49,7 @@ function topBar(title){
 return `
 <div class="topbar">
 
-<span onclick="home()">🏠</span>
+<span onclick="window.location.href='../MainMenu/mainmenu.html'">🏠</span>
 
 <span>${title}</span>
 
