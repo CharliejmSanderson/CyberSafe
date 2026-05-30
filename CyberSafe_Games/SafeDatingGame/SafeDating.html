@@ -7,10 +7,6 @@
 
   <style>
 
-    /* ============================================================
-       BASE
-    ============================================================ */
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -27,13 +23,6 @@
       padding: 20px 0;
     }
 
-
-    /* ============================================================
-       PHONE SHELL
-       Fixed height so the topbar stays pinned and only
-       the #screen area scrolls beneath it.
-    ============================================================ */
-
     .phone {
       width: 360px;
       height: 640px;
@@ -44,13 +33,6 @@
       display: flex;
       flex-direction: column;
     }
-
-
-    /* ============================================================
-       TOPBAR
-       Sits outside #screen so it never scrolls away.
-       Matches the consistent style used across all games.
-    ============================================================ */
 
     .topbar {
       background: #d49a6a;
@@ -79,13 +61,6 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
-
-    /* ============================================================
-       SCREEN
-       Fills the remaining phone height below the topbar.
-       Everything inside scrolls together as one unit.
-    ============================================================ */
-
     #screen {
       flex: 1;
       min-height: 0;
@@ -93,11 +68,6 @@
       display: flex;
       flex-direction: column;
     }
-
-
-    /* ============================================================
-       HOME SCREEN
-    ============================================================ */
 
     .home-header {
       background: linear-gradient(135deg, #d49a6a 0%, #c4856a 100%);
@@ -218,11 +188,6 @@
       flex-shrink: 0;
     }
 
-
-    /* ============================================================
-       CHAT SCREEN - contact header (scrolls with content)
-    ============================================================ */
-
     .chat-header {
       background: #4b5d57;
       padding: 12px 16px;
@@ -255,11 +220,6 @@
       opacity: 0.8;
     }
 
-
-    /* ============================================================
-       CHAT SCREEN - message bubbles
-       Plain div, grows with content, scrolls with the whole screen.
-    ============================================================ */
 
     .chat-messages {
       background: #e8f4f1;
@@ -312,11 +272,6 @@
       letter-spacing: 2px;
     }
 
-
-    /* ============================================================
-       CHAT SCREEN - reply choices (scrolls with content)
-    ============================================================ */
-
     .choices-area {
       background: #ffffff;
       padding: 12px;
@@ -362,11 +317,6 @@
     .choice-btn:active {
       transform: scale(0.98);
     }
-
-
-    /* ============================================================
-       CHAT SCREEN - flag buttons (scrolls with content)
-    ============================================================ */
 
     .flag-area {
       background: #ffffff;
@@ -435,11 +385,6 @@
       box-shadow: none;
       transform: none;
     }
-
-
-    /* ============================================================
-       RESULT SCREEN
-    ============================================================ */
 
     .result-screen {
       flex: 1;
@@ -545,33 +490,15 @@
 
 <body>
   <div class="phone">
-
-    <!--
-      TOPBAR
-      Always visible. Never scrolls.
-      Matches the consistent design used across all games.
-      The settings gear is a placeholder for the wider app.
-    -->
     <div class="topbar">
-      <button class="topbar-btn" onclick="showHome()" aria-label="Back to home">&#8592;</button>
+      <button class="topbar-btn" onclick="window.location.href='../MainMenu/mainmenu.html'" aria-label="Back to main menu">&#8592;</button>
       <span>Safe Online Dating</span>
       <button class="topbar-btn" aria-label="Settings">&#9881;&#65039;</button>
     </div>
 
-    <!--
-      SCREEN
-      Everything below the topbar scrolls together as one unit.
-      Content is injected here by SafeDating.js.
-    -->
     <div id="screen"></div>
 
   </div>
-
-  <!--
-    Load order matters:
-    1. Levels data first  - so the levels array exists
-    2. Game logic second  - so it can read the levels array
-  -->
   <script src="SafeDating_levels.js"></script>
   <script src="SafeDating.js"></script>
 </body>
