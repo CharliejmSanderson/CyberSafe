@@ -43,6 +43,29 @@ let scenarios = [
 
 ];
 
+/* TTS */
+
+function isTtsOn(){
+    const t = document.getElementById('ttsToggle');
+    return t ? t.checked : false;
+}
+
+function speakText(text){
+    if(!('speechSynthesis' in window)) return;
+    const s = new SpeechSynthesisUtterance(text);
+    s.lang = 'en-AU'; s.rate = 0.85; s.pitch = 1; s.volume = 1;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(s);
+}
+
+function stopSpeech(){
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+function handleTtsToggle(){
+    if(!isTtsOn()) stopSpeech();
+}
+
 /* TOP BAR */
 function topBar(title){
 
@@ -76,6 +99,8 @@ let data = scenarios[index];
 let progressPercent =
 ((index) / scenarios.length) * 100;
 
+const escaped = data.t.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
 document.getElementById("screen").innerHTML = `
 
 ${topBar("Safe Posting Online")}
@@ -94,13 +119,14 @@ style="width:${progressPercent}%">
 
 <div class="card">
 ${data.t}
+<button class="speak-btn" onclick="speakText('${escaped}')" aria-label="Read aloud">&#128266;</button>
 </div>
 
 <button
 class="answer-btn safe-btn"
 onclick="answer(true)">
 
-👍 SAFE TO POST
+&#128077; SAFE TO POST
 
 </button>
 
@@ -108,11 +134,14 @@ onclick="answer(true)">
 class="answer-btn unsafe-btn"
 onclick="answer(false)">
 
-👎 NOT SAFE
+&#128078; NOT SAFE
 
 </button>
 
 </div>`;
+
+if(isTtsOn()) speakText(data.t);
+}
 }
 
 /* ANSWER */
@@ -135,6 +164,9 @@ if(correct){
     score++;
 }
 
+const resultText = (correct ? "Correct!" : "Oops!") + " " + current.reason;
+const escaped = current.reason.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
 document.getElementById("screen").innerHTML = `
 
 ${topBar("Answer")}
@@ -144,12 +176,13 @@ ${topBar("Answer")}
 <div class="result-title
 ${correct ? "good" : "bad"}">
 
-${correct ? "Correct ✔" : "Oops ✖"}
+${correct ? "Correct &#10004;" : "Oops &#10006;"}
 
 </div>
 
 <p>
 ${current.reason}
+<button class="speak-btn" onclick="speakText('${escaped}')" aria-label="Read aloud">&#128266;</button>
 </p>
 
 <button class="next-btn"
@@ -160,6 +193,9 @@ NEXT
 </button>
 
 </div>`;
+
+if(isTtsOn()) speakText(resultText);
+}
 }
 
 /* NEXT */
@@ -316,33 +352,8 @@ if(theme === "blue-yellow"){
 /* TEXT SIZE */
 function setTextSize(size){
 
-let phone =
-document.querySelector(".phone");
-
-/* REMOVE OLD TEXT SIZES */
-phone.classList.remove(
-"text-small",
-"text-medium",
-"text-large",
-"text-xlarge"
-);
-
-/* APPLY SIZE */
-if(size === "small"){
-    phone.classList.add("text-small");
-}
-
-if(size === "medium"){
-    phone.classList.add("text-medium");
-}
-
-if(size === "large"){
-    phone.classList.add("text-large");
-}
-
-if(size === "xlarge"){
-    phone.classList.add("text-xlarge");
-}
+const scaleMap = { small:0.85, medium:1, large:1.2, xlarge:1.4 };
+document.documentElement.style.setProperty('--font-scale', scaleMap[size] || 1);
 }
 
 /* START */
