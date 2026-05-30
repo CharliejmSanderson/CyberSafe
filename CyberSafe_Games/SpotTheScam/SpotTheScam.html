@@ -492,8 +492,17 @@ main{
     </div>
 
     <button class="btn-home-from-settings" onclick="goHomeFromSettings()" aria-label="Go to home screen">
-      🏠 Back to Home
+      &#127968; Back to Home
     </button>
+
+    <div class="settings-section-label" style="margin-top:18px;">Accessibility</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
+      <span style="font-weight:700;font-size:1rem;color:#111;">&#128266; Read content aloud</span>
+      <label style="position:relative;width:48px;height:26px;flex-shrink:0;">
+        <input type="checkbox" id="ttsToggle" onchange="handleTtsToggle()" style="opacity:0;width:0;height:0;position:absolute;">
+        <span id="ttsTrack" style="position:absolute;inset:0;background:#ccc;border-radius:999px;cursor:pointer;transition:background 0.2s;"></span>
+      </label>
+    </div>
   </div>
 </div>
 
@@ -503,6 +512,22 @@ main{
 
 function openSettings(){document.getElementById('settings-overlay').classList.add('visible');}
 function closeSettings(){document.getElementById('settings-overlay').classList.remove('visible');}
+
+/* TTS */
+function isTtsOn(){var t=document.getElementById('ttsToggle');return t?t.checked:false;}
+function speakText(text){
+  if(!('speechSynthesis' in window))return;
+  var s=new SpeechSynthesisUtterance(text);
+  s.lang='en-AU';s.rate=0.85;s.pitch=1;s.volume=1;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(s);
+}
+function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();}
+function handleTtsToggle(){
+  var track=document.getElementById('ttsTrack');
+  if(isTtsOn()){if(track)track.style.background='#66bb6a';}
+  else{stopSpeech();if(track)track.style.background='#ccc';}
+}
 
 function goHomeFromSettings(){
   closeSettings();
@@ -760,7 +785,9 @@ function render_ques(){
   var fill=document.getElementById('progress-fill');
   fill.style.width=pct+'%';
   fill.parentElement.setAttribute('aria-valuenow',current_idx+1);
-  document.getElementById('card-label').textContent='Is this '+q.label.toLowerCase()+' real or fake?';
+  var labelText='Is this '+q.label.toLowerCase()+' real or fake?';
+  document.getElementById('card-label').innerHTML=labelText
+    +' <button onclick="speakText(\''+labelText+'\')" style="background:none;border:none;font-size:1.2rem;cursor:pointer;opacity:0.7;padding:2px;" aria-label="Read aloud">&#128266;</button>';
 
   var c=document.getElementById('message-content');
   if(q.type==='svg-bank')    c.innerHTML=bank_sms();
@@ -776,6 +803,8 @@ function render_ques(){
   document.getElementById('btn-prev').disabled=current_idx===0;
   document.getElementById('btn-next').disabled=!answered||current_idx===total-1;
   document.getElementById('score-display').textContent='Score: '+score+'/'+total;
+
+  if(isTtsOn()) speakText(labelText);
 }
 
 function ans_submit(choice){
@@ -792,21 +821,26 @@ function show_feedback(ok, clues){
   var title  = document.getElementById('dialog-title');
   var cluesEl= document.getElementById('dialog-clues');
 
-  icon.textContent  = ok ? '🎉' : '😟';
+  icon.textContent  = ok ? '&#127881;' : '&#128543;';
   title.textContent = ok ? 'Good job!' : 'Oh no, not right!';
   title.className   = 'dialog-title ' + (ok ? 'correct' : 'wrong');
   banner.className  = 'dialog-banner ' + (ok ? 'correct' : 'wrong');
 
- 
+  var clueTexts = clues.map(function(c){return c.text;});
+  var speakText_escaped = clueTexts.join('. ').replace(/'/g,"\\'");
+
   cluesEl.innerHTML = clues.map(function(c){
     return '<div class="clue-row">'
       + '<span class="clue-icon" aria-hidden="true">'+c.icon+'</span>'
       + '<span class="clue-text">'+c.text+'</span>'
       + '</div>';
-  }).join('');
+  }).join('')
+  + '<button onclick="speakText(\''+speakText_escaped+'\')" style="background:none;border:none;font-size:1.2rem;cursor:pointer;opacity:0.7;margin-top:8px;padding:4px;" aria-label="Read clues aloud">&#128266; Repeat</button>';
 
   document.getElementById('feedback-dialog').classList.add('visible');
   setTimeout(function(){document.getElementById('btn-continue').focus();},50);
+
+  if(isTtsOn()) speakText((ok ? 'Good job! ' : 'Oh no, not right! ') + clueTexts.join('. '));
 }
 function closeFeedback(){
   document.getElementById('feedback-dialog').classList.remove('visible');
