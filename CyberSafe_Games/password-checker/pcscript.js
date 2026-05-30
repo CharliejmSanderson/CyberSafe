@@ -45,12 +45,12 @@ const stopSpeechBtn2 = document.getElementById("stopSpeechBtn2");
 
 hubBtn.addEventListener("click", () => {
   stopSpeech();
-  window.location.href = "../mainmenu.html";
+  window.location.href = '../MainMenu/mainmenu.html';
 });
 
 hubBtn2.addEventListener("click", () => {
   stopSpeech();
-  window.location.href = "../mainmenu.html";
+  window.location.href = '../MainMenu/mainmenu.html';
 });
 
 /* TEXT TO SPEECH */
