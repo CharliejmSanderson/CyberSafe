@@ -443,17 +443,18 @@ h2{
     <div class="settings-modal-title">Settings</div>
 
     <div class="settings-section-label">Theme</div>
-    <button class="settings-btn active" id="theme-default"    onclick="setTheme('default')">&#127800; Default</button>
-    <button class="settings-btn" id="theme-dark"              onclick="setTheme('dark')">&#127761; Dark</button>
-    <button class="settings-btn" id="theme-light"             onclick="setTheme('light')">&#9898; High Contrast Light</button>
-    <button class="settings-btn" id="theme-blueyellow"        onclick="setTheme('blueyellow')">&#128309; Blue &amp; Yellow</button>
+    <button class="settings-btn" onclick="setTheme('normal')">&#127800; Default</button>
+    <button class="settings-btn" onclick="setTheme('dark')">&#127761; Dark</button>
+    <button class="settings-btn" onclick="setTheme('contrast-dark')">&#9899; High Contrast Dark</button>
+    <button class="settings-btn" onclick="setTheme('contrast-light')">&#9898; High Contrast Light</button>
+    <button class="settings-btn" onclick="setTheme('blue-yellow')">&#128309; Blue &amp; Yellow</button>
 
     <div class="settings-section-label">Text Size</div>
     <div class="settings-size-grid">
-      <button class="settings-btn" data-scale="0.85" onclick="setTextSize('small',this)">Small</button>
-      <button class="settings-btn active" data-scale="1" onclick="setTextSize('medium',this)">Medium</button>
-      <button class="settings-btn" data-scale="1.2" onclick="setTextSize('large',this)">Large</button>
-      <button class="settings-btn" data-scale="1.4" onclick="setTextSize('xlarge',this)">Extra Large</button>
+      <button class="settings-btn" onclick="setTextSize('small')">Small</button>
+      <button class="settings-btn" onclick="setTextSize('medium')">Medium</button>
+      <button class="settings-btn" onclick="setTextSize('large')">Large</button>
+      <button class="settings-btn" onclick="setTextSize('xlarge')">Extra Large</button>
     </div>
 
     <div class="settings-section-label">Accessibility</div>
@@ -465,20 +466,11 @@ h2{
       </label>
     </div>
 
-    <div class="settings-section-label">Sound Volume</div>
-    <div class="tts-row" style="gap:12px;">
-      <span>&#128266; Sound effects</span>
-      <input type="range" id="volumeSlider" min="0" max="1" step="0.05"
-             value="0.5" oninput="onVolumeChange(this.value)"
-             style="flex:1;min-width:0;accent-color:#4b2e83;">
-    </div>
-
     <button class="settings-done-btn" onclick="closeSettings()">Done</button>
 
   </div>
 </div>
 
-<script src="../settings.js"></script>
 <script src="SafePosting.js"></script>
 
 </body>
