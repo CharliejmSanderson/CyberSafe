@@ -1,5 +1,3 @@
-/* GAME STATE */
-
 let unlockedLevel    = 0;  
 let currentLevel     = 0;
 let currentStep      = 0;
@@ -9,20 +7,16 @@ let shownMessages    = [];
 
 
 /* SOUNDS */
-
-/* SOUNDS */
-
-let _audioCtx = null;
-function getAudioCtx() {
-  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (_audioCtx.state === 'suspended') _audioCtx.resume();
-  return _audioCtx;
+let audioContext = null;
+function audio() {
+  if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioContext.state === 'suspended') audioContext.resume();
+  return audioContext;
 }
 
-function playSound(type) {
+function sound(type) {
   if (!window.AudioContext && !window.webkitAudioContext) return;
-  const ctx = getAudioCtx();
-
+  const ctx = audio();
   if (type === 'message') {
     const osc  = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -47,6 +41,7 @@ function playSound(type) {
     });
 
   } else if (type === 'wrong') {
+
     const osc  = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.connect(gain); gain.connect(ctx.destination);
@@ -75,7 +70,7 @@ function setScreen(html) {
   document.getElementById('screen').innerHTML = html;
 }
 
-function setBackBtn(action) {
+function BackButton(action) {
   const btn = document.getElementById('backBtn');
   if (!btn) return;
   if (action === 'menu') {
@@ -88,17 +83,14 @@ function setBackBtn(action) {
     btn.onclick = showHome;
   }
 }
-
 /*  SETTINGS */
 
 
 function openSettings() {
-  document.getElementById('settingsOverlay').classList.add('active');
-}
+  document.getElementById('settingsOverlay').classList.add('active');}
 
 function closeSettings() {
-  document.getElementById('settingsOverlay').classList.remove('active');
-}
+  document.getElementById('settingsOverlay').classList.remove('active');}
 
 document.getElementById('settingsOverlay').addEventListener('click', function(e) {
   if (e.target === this) closeSettings();
@@ -123,13 +115,11 @@ function setTextSize(btn) {
 }
 
 function handleTtsToggle() {
-  if (!isTtsOn()) stopSpeech();
-}
+  if (!isTtsOn()) stopSpeech();}
 
 function isTtsOn() {
   const toggle = document.getElementById('ttsToggle');
-  return toggle ? toggle.checked : false;
-}
+  return toggle ? toggle.checked : false;}
 
 
 
@@ -138,13 +128,11 @@ function isTtsOn() {
 
 function speakText(text) {
   if (!('speechSynthesis' in window)) return;
-
   const utterance   = new SpeechSynthesisUtterance(text);
   utterance.lang    = 'en-AU';
   utterance.rate    = 0.85;
   utterance.pitch   = 1;
   utterance.volume  = 1;
-
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(utterance);
 }
@@ -169,12 +157,11 @@ function speakChoice(text) {
 
 function showHome() {
   stopSpeech();
-  setBackBtn('menu');
+  BackButton('menu');
   currentStep      = 0;
   conversationDone = false;
   waitingForReply  = false;
   shownMessages    = [];
-
   const cardsHTML = levels.map((lv, idx) => {
 
     const state = idx < unlockedLevel   ? 'completed'
@@ -219,7 +206,7 @@ function showHome() {
 
 function startLevel(idx) {
   stopSpeech();
-  setBackBtn('home');
+  BackButton('home');
   currentLevel     = idx;
   currentStep      = 0;
   conversationDone = false;
@@ -227,7 +214,7 @@ function startLevel(idx) {
   shownMessages    = [];
 
   renderChat();
-  setTimeout(addMessage, 300);
+  setTimeout(addAMessage, 300);
 }
 
 
@@ -282,9 +269,9 @@ function renderChat() {
   }
 
   /* Flag buttons */
-  const ready        = conversationDone;
+  const ready = conversationDone;
   const disabledAttr = ready ? '' : 'disabled';
-  const flagLabel    = ready ? 'What do you think?' : 'Read the chat first';
+  const flagLabel = ready ? 'What do you think?' : 'Read the chat first';
 
   const flagHTML = `
     <div class="flag-area">
@@ -333,14 +320,14 @@ function renderChat() {
 }
 
 
-function addMessage() {
+function addAMessage() {
   const lv   = levels[currentLevel];
   const step = lv.conversation[currentStep];
   if (!step) return;
 
   if (step.them) {
     shownMessages.push({ type: 'them', text: step.them });
-    playSound('message');
+    sound('message');
     if (isTtsOn()) speakText(step.them);
   }
 
@@ -360,7 +347,7 @@ function pickChoice(choiceIdx) {
   const choice = step.choices[choiceIdx];
 
   shownMessages.push({ type: 'me', text: choice.text });
-  playSound('message');
+  sound('message');
 
   currentStep     = choice.next;
   waitingForReply = true;
@@ -387,12 +374,12 @@ function pickChoice(choiceIdx) {
 
       if (choice.reply) {
         shownMessages.push({ type: 'them', text: choice.reply });
-        playSound('message');
+        sound('message');
         if (isTtsOn()) speakText(choice.reply);
       }
 
       waitingForReply = false;
-      addMessage();
+      addAMessage();
 
     }, 700);
 
@@ -428,20 +415,20 @@ function submitFlag(playerChoice) {
     else                                result = 'wrong';
   }
 
-  showResult(result, playerChoice);
+  resluts(result, playerChoice);
 }
 
 /*  RESULT SCREEN */
 
-function showResult(result, playerChoice) {
+function resluts(result, playerChoice) {
   const lv     = levels[currentLevel];
   const isLast = currentLevel >= levels.length - 1;
 
   if (result === 'correct' || result === 'close') {
     saveProgress(currentLevel + 1);
-    playSound('correct');
+    sound('correct');
   } else {
-    playSound('wrong');
+    sound('wrong');
   }
 
   const choiceLabel = playerChoice === 'green'  ? '&#127937; Green Flag'
@@ -521,8 +508,4 @@ function showResult(result, playerChoice) {
   `);
 }
 
-
-// ============================================================
-//  START THE GAME
-// ============================================================
 showHome();
