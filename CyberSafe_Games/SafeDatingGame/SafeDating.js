@@ -8,6 +8,50 @@ let waitingForReply  = false;
 let shownMessages    = [];    
 
 
+/* SOUNDS */
+
+function playSound(type) {
+  if (!window.AudioContext && !window.webkitAudioContext) return;
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+  if (type === 'message') {
+    /* soft bubble pop */
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.12);
+
+  } else if (type === 'correct') {
+    [523.25, 659.25].forEach(function(freq, i) {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine'; osc.frequency.value = freq;
+      const t = ctx.currentTime + i * 0.14;
+      gain.gain.setValueAtTime(0.22, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+      osc.start(t); osc.stop(t + 0.35);
+    });
+
+  } else if (type === 'wrong') {
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(220, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.25);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.3);
+  }
+}
+
+
 /* PROGRESS */
 
 function saveProgress(newLevel) {
@@ -288,7 +332,7 @@ function addMessage() {
 
   if (step.them) {
     shownMessages.push({ type: 'them', text: step.them });
-
+    playSound('message');
     if (isTtsOn()) speakText(step.them);
   }
 
@@ -308,6 +352,7 @@ function pickChoice(choiceIdx) {
   const choice = step.choices[choiceIdx];
 
   shownMessages.push({ type: 'me', text: choice.text });
+  playSound('message');
 
   currentStep     = choice.next;
   waitingForReply = true;
@@ -334,7 +379,7 @@ function pickChoice(choiceIdx) {
 
       if (choice.reply) {
         shownMessages.push({ type: 'them', text: choice.reply });
-
+        playSound('message');
         if (isTtsOn()) speakText(choice.reply);
       }
 
@@ -386,6 +431,9 @@ function showResult(result, playerChoice) {
 
   if (result === 'correct' || result === 'close') {
     saveProgress(currentLevel + 1);
+    playSound('correct');
+  } else {
+    playSound('wrong');
   }
 
   const choiceLabel = playerChoice === 'green'  ? '&#127937; Green Flag'
