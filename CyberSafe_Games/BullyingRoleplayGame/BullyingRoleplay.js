@@ -1,16 +1,41 @@
+let completedScenarios = [];
 let progress = 0;
 let currentCharacter = '';
 let step = 0;
 let waitingForReply = false;
 let onHomeScreen = true;
+let onHomeScreen = true;
 
 /* CHARACTERS */
 
 const characters = {
-  sly:   { name: 'Sir Sly Paws',    emoji: '🦊', correct: 'nice'  },
-  chonk: { name: 'Captain Chonk',   emoji: '🐼', correct: 'block' },
-  dozy:  { name: 'Dozy Dropbear',   emoji: '🐨', correct: 'block' },
-  roar:  { name: 'Tiny Roar',       emoji: '🐯', correct: 'anger' }
+  sly: {
+    name: 'Sir Sly Paws',
+    emoji: '🦊',
+    type: 'Verbal Bullying',
+    correct: 'nice'
+  },
+
+  chonk: {
+    name: 'Captain Chonk',
+    emoji: '🐼',
+    type: 'Cyberbullying',
+    correct: 'block'
+  },
+
+  dozy: {
+    name: 'Dozy Dropbear',
+    emoji: '🐨',
+    type: 'Social Exclusion',
+    correct: 'block'
+  },
+
+  roar: {
+    name: 'Tiny Roar',
+    emoji: '🐯',
+    type: 'Intimidation',
+    correct: 'anger'
+  }
 };
 
 const firstMessages = {
@@ -21,10 +46,17 @@ const firstMessages = {
 };
 
 const secondMessages = {
-  sly:   '😒 Your picture looks weird.',
-  chonk: '😐 Your picture looks bad.',
-  dozy:  '😂 Your posts are so boring.',
-  roar:  '😠 You never reply properly!'
+  sly:
+    'Everyone laughs when you talk. Maybe you should stop speaking.',
+
+  chonk:
+    'I made a group chat about you. Everyone is sharing jokes about you.',
+
+  dozy:
+    'We are all meeting later, but you are not invited.',
+
+  roar:
+    'If you do not do what I say, nobody will want to be your friend.'
 };
 
 const explanations = {
@@ -47,6 +79,33 @@ const explanations = {
     nice:  'Tiny Roar is using pressure tactics. A firm but calm response is more appropriate here.',
     block: 'Blocking removes the pressure, but a firm response first can also be the right move with Tiny Roar.',
     anger: 'Correct. Tiny Roar is trying to pressure you. A firm, direct response is appropriate here.'
+  }
+};
+
+const consequences = {
+
+  sly: {
+    nice:  'The conversation becomes calmer and the situation improves.',
+    block: 'The conversation ends, but the misunderstanding is not resolved.',
+    anger: 'The argument becomes worse and everyone feels upset.'
+  },
+
+  chonk: {
+    nice:  'The bullying may continue because the behaviour was not addressed.',
+    block: 'The bullying stops and can be reported to keep you safe.',
+    anger: 'The conflict may become bigger and more hurtful.'
+  },
+
+  dozy: {
+    nice:  'The exclusion may continue and you may still feel left out.',
+    block: 'You protect yourself and can seek support from trusted people.',
+    anger: 'The situation may become more stressful.'
+  },
+
+  roar: {
+    nice:  'The pressure may continue because no clear boundary was set.',
+    block: 'The pressure stops, but the issue is not discussed.',
+    anger: 'You set a clear boundary and challenge the intimidation.'
   }
 };
 
@@ -195,7 +254,10 @@ function showHome() {
 function chatItemHTML(id, emoji, name) {
   return '<div class="chat-item" onclick="startChat(\'' + id + '\')">'
     + '<div class="avatar">' + emoji + '</div>'
-    + '<span class="chat-item-name">' + name + '</span>'
+    + '<div>'
+    + '<div class="chat-item-name">' + name + '</div>'
+    + '<small>' + characters[id].type + '</small>'
+    + '</div>'
     + '</div>';
 }
 
@@ -336,11 +398,28 @@ function showChoices() {
 function finalChoice(choice) {
   stopSpeech();
   const char    = characters[currentCharacter];
-  const correct = choice === char.correct;
-  const expl    = explanations[currentCharacter][choice];
+  const expl = explanations[currentCharacter][choice];
+  const consequence = consequences[currentCharacter][choice];
 
-  if (correct) { progress++; playSound('correct'); }
-  else { playSound('wrong'); }
+  if (correct) {
+
+    if (!completedScenarios.includes(currentCharacter)) {
+      completedScenarios.push(currentCharacter);
+      progress++;
+    }
+
+    playSound('correct');
+
+  } else {
+
+    playSound('wrong');
+
+  }
+
+  if (completedScenarios.length === 4) {
+  showLearningSummary();
+  return;
+  }
 
   const percent = (progress / 4) * 100;
   const safeExpl = expl.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
@@ -352,17 +431,64 @@ function finalChoice(choice) {
     + '<div class="result-icon">' + (correct ? '🎉' : '🤔') + '</div>'
     + '<div class="result-title ' + (correct ? 'result-correct' : 'result-wrong') + '">'
     + (correct ? '&#10004; Correct response!' : 'Not the best choice') + '</div>'
-    + '<div class="result-explanation">' + expl
+    + '<div class="result-explanation">'
+    + '<strong>Feedback:</strong><br><br>'
+    + expl
+    + '<br><br><strong>What could happen next?</strong><br><br>'
+    + consequence
     + '<button class="bubble-speak" onclick="speakText(\'' + safeExpl + '\')" aria-label="Read explanation aloud">&#128266;</button>'
     + '</div>'
     + '<div class="result-progress-label">' + progress + ' of 4 conversations completed</div>'
     + '<div class="result-progress-bar-bg"><div class="result-progress-bar-fill" style="width:' + percent + '%"></div></div>'
+    + '<button class="back-btn" onclick="startChat(currentCharacter)">🔄 Replay Scenario</button>'
+    + '<br><br>'
     + '<button class="back-btn" onclick="showHome()">&#8592; Back to Chats</button>'
     + '</div>';
 
   if (isTtsOn()) speakText(resultText);
 }
 
+function showLearningSummary() {
+
+  document.getElementById('screen').innerHTML =
+
+    topBarHTML('Learning Summary', true)
+
+    + '<div class="content">'
+
+    + '<div class="achievement-card">'
+    + '<div class="achievement-text">'
+    + '<h3>🎓 What You Learned</h3><br>'
+
+    + '✅ Bullying can happen in different forms.<br><br>'
+
+    + '✅ Staying calm can help in difficult situations.<br><br>'
+
+    + '✅ Blocking and reporting can help stop cyberbullying.<br><br>'
+
+    + '✅ Setting boundaries can protect your wellbeing.<br><br>'
+
+    + '✅ It is okay to ask for help from trusted people.'
+    + '</div>'
+    + '</div>'
+
+    + '<div class="achievement-card">'
+    + '<div class="achievement-text">'
+    + '<h3>🏆 Great Work!</h3><br>'
+    + 'You completed all bullying scenarios and practised safe responses.'
+    + '</div>'
+    + '</div>'
+
+    + '<button class="back-btn" onclick="showHome()">Return Home</button>'
+
+    + '</div>';
+
+  if (isTtsOn()) {
+    speakText(
+      'Congratulations. You completed all bullying scenarios and learned how to recognise bullying and respond safely.'
+    );
+  }
+}
 /* SETTINGS OVERLAY CLOSE ON BACKDROP TAP */
 
 document.getElementById('settingsOverlay').addEventListener('click', function(e) {
