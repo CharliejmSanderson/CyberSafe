@@ -1,68 +1,37 @@
+/* MUSIC */
+
 const bgm = document.getElementById("bgm");
 const musicToggleBtn = document.getElementById("musicToggleBtn");
 
-let musicOn = localStorage.getItem("musicOn") === "true";
-let needsResumeTap = false;
+let musicOn = false;
 
 function startMusic() {
-  if (!bgm || !musicOn) return;
+    if (!bgm) return;
 
-  bgm.volume = 0.25;
-
-  bgm.play()
-    .then(() => {
-      needsResumeTap = false;
-      musicToggleBtn.textContent = "🔇 Turn Off Music";
-    })
-    .catch(() => {
-      needsResumeTap = true;
-      musicToggleBtn.textContent = "🎵 Tap to Resume Music";
-    });
+    bgm.volume = 0.25;
+    bgm.play();
 }
 
 function stopMusic() {
-  if (!bgm) return;
-  bgm.pause();
-}
+    if (!bgm) return;
 
-function updateMusicButton() {
-  if (!musicToggleBtn) return;
-
-  if (needsResumeTap && musicOn) {
-    musicToggleBtn.textContent = "🎵 Tap to Resume Music";
-  } else {
-    musicToggleBtn.textContent = musicOn
-      ? "🔇 Turn Off Music"
-      : "🎵 Turn On Music";
-  }
+    bgm.pause();
 }
 
 function toggleMusic() {
-  if (needsResumeTap && musicOn) {
-    startMusic();
-    return;
-  }
+    musicOn = !musicOn;
 
-  musicOn = !musicOn;
-  localStorage.setItem("musicOn", musicOn);
-
-  if (musicOn) {
-    startMusic();
-  } else {
-    needsResumeTap = false;
-    stopMusic();
-    updateMusicButton();
-  }
+    if (musicOn) {
+        musicToggleBtn.textContent = "🔇 Turn Off Music";
+        startMusic();
+    } else {
+        musicToggleBtn.textContent = "🎵 Turn On Music";
+        stopMusic();
+    }
 }
 
 if (musicToggleBtn) {
-  musicToggleBtn.addEventListener("click", toggleMusic);
-}
-
-updateMusicButton();
-
-if (musicOn) {
-  startMusic();
+    musicToggleBtn.addEventListener("click", toggleMusic);
 }
 
 function launchGame(path) {
