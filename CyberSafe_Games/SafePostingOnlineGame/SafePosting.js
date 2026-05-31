@@ -45,12 +45,14 @@ let scenarios = [
 
 /* SOUNDS */
 
-let _audioCtx = null;
+
+let audioContext = null;
 function getAudioCtx() {
-  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (_audioCtx.state === 'suspended') _audioCtx.resume();
-  return _audioCtx;
+  if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioContext.state === 'suspended') audioContext.resume();
+  return audioContext;
 }
+
 
 function playSound(type) {
   if (!window.AudioContext && !window.webkitAudioContext) return;
@@ -66,6 +68,7 @@ function playSound(type) {
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
       osc.start(t); osc.stop(t + 0.4);
     });
+
   } else if (type === 'wrong') {
     const osc  = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -78,6 +81,11 @@ function playSound(type) {
     osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.35);
   }
 }
+
+
+
+
+
 
 /* TTS */
 
@@ -93,7 +101,6 @@ function speakText(text){
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(s);
 }
-
 function stopSpeech(){
     if('speechSynthesis' in window) window.speechSynthesis.cancel();
 }
@@ -107,57 +114,40 @@ function topBar(title){
 
 return `
 <div class="topbar">
-
 <span onclick="window.location.href='../MainMenu/mainmenu.html'">🏠</span>
-
 <span>${title}</span>
-
 <span onclick="settings()">⚙️</span>
-
 </div>`;
 }
 
 /* HOME */
 function home(){
-
 index = 0;
 score = 0;
 attempts = [];
-
 show();
 }
 
 /* SHOW QUESTION */
 function show(){
-
 let data = scenarios[index];
-
 let progressPercent =
 ((index) / scenarios.length) * 100;
-
 const escaped = data.t.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-
 document.getElementById("screen").innerHTML = `
-
 ${topBar("Safe Posting Online")}
-
 <div class="content">
-
 <h1>Online Safety</h1>
-
 <div class="progress-box">
 <div class="progress"
 style="width:${progressPercent}%">
 </div>
 </div>
-
 <h2>Is this safe to post online?</h2>
-
 <div class="card">
 ${data.t}
 <button class="speak-btn" onclick="speakText('${escaped}')" aria-label="Read aloud">&#128266;</button>
 </div>
-
 <button
 class="answer-btn safe-btn"
 onclick="answer(true)">
@@ -169,11 +159,9 @@ onclick="answer(true)">
 <button
 class="answer-btn unsafe-btn"
 onclick="answer(false)">
-
 &#128078; NOT SAFE
 
 </button>
-
 </div>`;
 
 if(isTtsOn()) speakText(data.t);
@@ -181,19 +169,22 @@ if(isTtsOn()) speakText(data.t);
 
 /* ANSWER */
 function answer(choice){
-
 let current = scenarios[index];
-
 let correct =
 current.safe === choice;
 
+
+
 /* SAVE ATTEMPT */
+
+
 attempts.push({
     question: current.t,
     chosen: choice,
     correctAnswer: current.safe,
     correct: correct
 });
+
 
 if(correct){
     score++;
@@ -210,12 +201,9 @@ document.getElementById("screen").innerHTML = `
 ${topBar("Answer")}
 
 <div class="content">
-
 <div class="result-title
 ${correct ? "good" : "bad"}">
-
 ${correct ? "Correct &#10004;" : "Oops &#10006;"}
-
 </div>
 
 <p>
@@ -229,7 +217,6 @@ onclick="next()">
 NEXT
 
 </button>
-
 </div>`;
 
 if(isTtsOn()) speakText(resultText);
@@ -237,9 +224,7 @@ if(isTtsOn()) speakText(resultText);
 
 /* NEXT */
 function next(){
-
 index++;
-
 if(index < scenarios.length){
 
     show();
@@ -254,22 +239,15 @@ if(index < scenarios.length){
 function finalResult(){
 
 let reviewHTML = "";
-
 attempts.forEach(item => {
-
 reviewHTML += `
-
 <div class="badge">
-
 <div style="
 font-weight:bold;
 margin-bottom:10px;
 ">
-
 ${item.question}
-
 </div>
-
 <div>
 Your answer:
 <b>
@@ -293,7 +271,6 @@ color:${item.correct ? "green" : "red"};
 ${item.correct ? "✔ Correct" : "✖ Wrong"}
 
 </div>
-
 </div>
 `;
 });
@@ -303,7 +280,6 @@ document.getElementById("screen").innerHTML = `
 ${topBar("Your Results")}
 
 <div class="content">
-
 <h1>Great Job!</h1>
 
 <h2>
@@ -312,9 +288,7 @@ out of ${scenarios.length}
 </h2>
 
 ${badge("⭐ Beginner", score >= 1)}
-
 ${badge("🟢 Smart User", score >= 3)}
-
 ${badge("🏆 Safety Expert", score >= 5)}
 
 <h2 style="margin-top:30px;">
@@ -325,9 +299,7 @@ ${reviewHTML}
 
 <button class="next-btn"
 onclick="home()">
-
 PLAY AGAIN
-
 </button>
 
 </div>`;
@@ -344,21 +316,24 @@ ${unlocked ? "✔" : "🔒"}
 
 </div>`;
 }
-
 /* SETTINGS */
 function settings(){
 document.getElementById('settingsModal') && document.getElementById('settingsModal').classList.add('active');
 document.getElementById('settingsOverlay') && document.getElementById('settingsOverlay').classList.add('active');
-}
+}  
+
 
 function closeSettings(){
 document.getElementById('settingsOverlay') && document.getElementById('settingsOverlay').classList.remove('active');
 }
+
+
 /* THEME */
 function setTheme(theme){
 
 let phone =
 document.querySelector(".phone");
+
 
 /* REMOVE OLD THEMES */
 phone.classList.remove(
