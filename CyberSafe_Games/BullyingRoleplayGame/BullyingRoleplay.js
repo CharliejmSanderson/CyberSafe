@@ -8,7 +8,7 @@ let step = 0;
 function topBar(title) {
   return `
     <div class="topbar">
-      <span onclick="showHome()">←</span>
+      <span onclick="showHome()">🏠</span>
       <span class="title">${title}</span>
       <span onclick="openSettings()">⚙️</span>
     </div>
