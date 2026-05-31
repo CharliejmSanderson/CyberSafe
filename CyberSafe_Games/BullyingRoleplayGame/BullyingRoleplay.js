@@ -1,10 +1,9 @@
-console.log("NEW JS LOADED");
-let completedScenarios = [];
-let progress = 0;
-let currentCharacter = '';
-let step = 0;
-let waitingForReply = false;
-let onHomeScreen = true;
+1 let completedScenarios = [];
+2 let progress = 0;
+3 let currentCharacter = '';
+4 let step = 0;
+5 let waitingForReply = false;
+6 let onHomeScreen = true;
 
 /* CHARACTERS */
 
