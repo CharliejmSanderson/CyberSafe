@@ -1,3 +1,4 @@
+console.log("NEW JS LOADED");
 let completedScenarios = [];
 let progress = 0;
 let currentCharacter = '';
