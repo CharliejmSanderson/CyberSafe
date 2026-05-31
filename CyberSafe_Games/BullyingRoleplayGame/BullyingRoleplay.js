@@ -4,7 +4,6 @@ let currentCharacter = '';
 let step = 0;
 let waitingForReply = false;
 let onHomeScreen = true;
-let onHomeScreen = true;
 
 /* CHARACTERS */
 
@@ -397,7 +396,8 @@ function showChoices() {
 
 function finalChoice(choice) {
   stopSpeech();
-  const char    = characters[currentCharacter];
+  const char = characters[currentCharacter];
+  const correct = choice === char.correct;
   const expl = explanations[currentCharacter][choice];
   const consequence = consequences[currentCharacter][choice];
 
@@ -476,6 +476,12 @@ function showLearningSummary() {
     + '<div class="achievement-text">'
     + '<h3>🏆 Great Work!</h3><br>'
     + 'You completed all bullying scenarios and practised safe responses.'
+    + '<div style="margin-top:15px;">'
+    + '<span class="summary-badge">Verbal Bullying</span>'
+    + '<span class="summary-badge">Cyberbullying</span>'
+    + '<span class="summary-badge">Social Exclusion</span>'
+    + '<span class="summary-badge">Intimidation</span>'
+    + '</div>'
     + '</div>'
     + '</div>'
 
