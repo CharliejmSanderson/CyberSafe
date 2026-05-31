@@ -567,3 +567,22 @@ body.theme-blueyellow .tip-box {
         padding:12px;
     }
 }
+
+.hidden {
+    display: none;
+}
+
+/* DARK THEME CONTACT LIST FIX */
+
+body.theme-dark .contact-card {
+    background: #1f1f1f;
+    border: 1px solid #444;
+}
+
+body.theme-dark .contact-card h3 {
+    color: white;
+}
+
+body.theme-dark .contact-card p {
+    color: #d0d0d0;
+}
