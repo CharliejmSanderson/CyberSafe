@@ -1,3 +1,39 @@
+const bgm = document.getElementById("bgm");
+const musicToggleBtn = document.getElementById("musicToggleBtn");
+
+let musicOn = true;
+
+function startMusic() {
+  if (!bgm || !musicOn) return;
+
+  bgm.volume = 0.25;
+  bgm.play().catch(() => {
+    // Browser may block autoplay until user clicks
+  });
+}
+
+function stopMusic() {
+  if (!bgm) return;
+  bgm.pause();
+}
+
+function toggleMusic() {
+  musicOn = !musicOn;
+
+  if (musicOn) {
+    musicToggleBtn.textContent = "🔇 Turn Off Music";
+    startMusic();
+  } else {
+    musicToggleBtn.textContent = "🔊 Turn On Music";
+    stopMusic();
+  }
+}
+
+musicToggleBtn.addEventListener("click", toggleMusic);
+
+// Try starting music after first user interaction
+document.addEventListener("click", startMusic, { once: true });
+
 function launchGame(path) {
   stopSpeech();
   window.location.href = path;
