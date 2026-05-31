@@ -135,9 +135,16 @@ sizeButtons.forEach((button) => {
 
 /* SOUNDS */
 
+let _audioCtx = null;
+function getAudioCtx() {
+  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (_audioCtx.state === 'suspended') _audioCtx.resume();
+  return _audioCtx;
+}
+
 function playSound(type) {
   if (!window.AudioContext && !window.webkitAudioContext) return;
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const ctx = getAudioCtx();
 
   if (type === 'typing') {
     /* quiet key tap */
@@ -148,7 +155,7 @@ function playSound(type) {
     const gain = ctx.createGain();
     src.buffer = buf;
     src.connect(gain); gain.connect(ctx.destination);
-    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.setValueAtTime(0.03, ctx.currentTime);
     src.start();
 
   } else if (type === 'correct') {
