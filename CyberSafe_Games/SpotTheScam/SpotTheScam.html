@@ -464,17 +464,17 @@ main{
     <div class="settings-title">Settings</div>
 
     <div class="settings-section-label">Theme</div>
-    <button class="theme-btn active" id="theme-default" onclick="setTheme('default',this)">Default</button>
-    <button class="theme-btn" id="theme-dark"    onclick="setTheme('dark',this)">High Contrast Dark</button>
-    <button class="theme-btn" id="theme-lighthc" onclick="setTheme('light-hc',this)">High Contrast Light</button>
-    <button class="theme-btn" id="theme-by"      onclick="setTheme('blue-yellow',this)">Blue–Yellow Accessible</button>
+    <button class="theme-btn active" id="theme-default"    onclick="setTheme('default',this)">Default</button>
+    <button class="theme-btn" id="theme-dark"              onclick="setTheme('dark',this)">High Contrast Dark</button>
+    <button class="theme-btn" id="theme-light"             onclick="setTheme('light',this)">High Contrast Light</button>
+    <button class="theme-btn" id="theme-blueyellow"        onclick="setTheme('blueyellow',this)">Blue–Yellow Accessible</button>
 
     <div class="settings-section-label">Text Size</div>
     <div class="size-grid">
-      <button class="size-btn" onclick="setSize('0.82rem',this)">Small</button>
-      <button class="size-btn active" onclick="setSize('1rem',this)">Medium</button>
-      <button class="size-btn" onclick="setSize('1.15rem',this)">Large</button>
-      <button class="size-btn" onclick="setSize('1.3rem',this)">Extra Large</button>
+      <button class="size-btn" data-scale="0.82" onclick="setSize('0.82rem',this)">Small</button>
+      <button class="size-btn active" data-scale="1" onclick="setSize('1rem',this)">Medium</button>
+      <button class="size-btn" data-scale="1.15" onclick="setSize('1.15rem',this)">Large</button>
+      <button class="size-btn" data-scale="1.3" onclick="setSize('1.3rem',this)">Extra Large</button>
     </div>
 
     <div class="settings-section-label" style="margin-top:18px;">Accessibility</div>
@@ -485,11 +485,20 @@ main{
         <span id="ttsTrack" style="position:absolute;inset:0;background:#ccc;border-radius:999px;cursor:pointer;transition:background 0.2s;"></span>
       </label>
     </div>
+
+    <div class="settings-section-label" style="margin-top:18px;">Sound Volume</div>
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+      <span style="font-weight:700;font-size:1rem;color:var(--text);">&#128266; Sound effects</span>
+      <input type="range" id="volumeSlider" min="0" max="1" step="0.05"
+             value="0.5" oninput="onVolumeChange(this.value)"
+             style="flex:1;min-width:0;accent-color:var(--header);">
+    </div>
   </div>
 </div>
 
 </div>
 
+<script src="../settings.js"></script>
 <script>
 
 function openSettings(){document.getElementById('settings-overlay').classList.add('visible');}
@@ -505,13 +514,14 @@ function getAudioCtx(){
 function playSound(type){
   if(!window.AudioContext&&!window.webkitAudioContext) return;
   var ctx=getAudioCtx();
+  var vol=getVolume();
   if(type==='correct'){
     [523.25,659.25].forEach(function(freq,i){
       var osc=ctx.createOscillator(), gain=ctx.createGain();
       osc.connect(gain); gain.connect(ctx.destination);
       osc.type='sine'; osc.frequency.value=freq;
       var t=ctx.currentTime+i*0.14;
-      gain.gain.setValueAtTime(0.3,t);
+      gain.gain.setValueAtTime(vol*0.6,t);
       gain.gain.exponentialRampToValueAtTime(0.001,t+0.4);
       osc.start(t); osc.stop(t+0.4);
     });
@@ -521,7 +531,7 @@ function playSound(type){
     osc.type='sine';
     osc.frequency.setValueAtTime(220,ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(110,ctx.currentTime+0.3);
-    gain.gain.setValueAtTime(0.25,ctx.currentTime);
+    gain.gain.setValueAtTime(vol*0.5,ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.35);
     osc.start(ctx.currentTime); osc.stop(ctx.currentTime+0.35);
   }
@@ -539,35 +549,48 @@ function speakText(text){
 function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();}
 function handleTtsToggle(){
   var track=document.getElementById('ttsTrack');
-  if(isTtsOn()){if(track)track.style.background='#66bb6a';}
+  var on=isTtsOn();
+  saveSettings('ttsOn', on);
+  if(on){if(track)track.style.background='#66bb6a';}
   else{stopSpeech();if(track)track.style.background='#ccc';}
 }
 
 function goHomeFromSettings(){
   closeSettings();
-
   document.getElementById('quiz-screen').style.display='none';
   document.getElementById('results-screen').style.display='none';
   document.getElementById('score-display').style.display='none';
   document.getElementById('home-screen').style.display='flex';
-
   current_idx=0; score=0; answers=new Array(questions.length).fill(null);
 }
 
+/* SpotTheScam theme map: canonical -> data-theme value */
+var _scamThemeMap = { default:'', dark:'dark', light:'light-hc', blueyellow:'blue-yellow' };
+
 function setTheme(t,btn){
-  document.getElementById('app').setAttribute('data-theme', t==='default'?'':t);
+  document.getElementById('app').setAttribute('data-theme', _scamThemeMap[t] !== undefined ? _scamThemeMap[t] : '');
   document.querySelectorAll('.theme-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
+  saveSettings('theme', t);
 }
 function setSize(s,btn){
   document.documentElement.style.setProperty('--fs',s);
   document.querySelectorAll('.size-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
+  /* derive scale from rem value for persistence */
+  saveSettings('fontScale', parseFloat(s));
 }
-function setFont(f,btn){
-  document.documentElement.style.setProperty('--font',f);
-  document.querySelectorAll('.font-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
+function onVolumeChange(val){
+  saveSettings('volume', val);
+}
+function applySettings(){
+  var s=loadSettings();
+  document.getElementById('app').setAttribute('data-theme', _scamThemeMap[s.theme] !== undefined ? _scamThemeMap[s.theme] : '');
+  document.documentElement.style.setProperty('--fs', s.fontScale + 'rem');
+  syncSettingsUI(s);
+  /* sync ttsTrack colour */
+  var track=document.getElementById('ttsTrack');
+  if(track) track.style.background = s.ttsOn ? '#66bb6a' : '#ccc';
 }
 document.getElementById('settings-overlay').addEventListener('click',function(e){
   if(e.target===this) closeSettings();
@@ -893,6 +916,7 @@ function restart_quiz(){
   document.getElementById('home-screen').style.display='flex';
 }
 
+applySettings();
 document.getElementById('feedback-dialog').addEventListener('keydown',function(e){if(e.key==='Escape')closeFeedback();});
 document.getElementById('settings-overlay').addEventListener('keydown',function(e){if(e.key==='Escape')closeSettings();});
 </script>
