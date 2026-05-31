@@ -1,18 +1,13 @@
-// ============================================================
-//  SafeDating_levels.js
-//  All level data for the Safe Online Dating game.
+//  How to add a new level
 //
-//
-//  HOW TO ADD A NEW LEVEL
-//  ----------------------
 //  1. Copy one of the level blocks below
 //  2. Paste it after the last level (before the closing ]; )
 //  3. Fill in all the details
 //  4. Add a comma after the level above it
 //
 //
-//  FLAG TYPES
-//  ----------
+//  Flag types
+//
 //  "green"        - safe behaviour.   Green = correct. Red = wrong.
 //  "red"          - unsafe behaviour. Red = correct.   Green = wrong.
 //  "yellow-red"   - ambiguous, leaning unsafe.
@@ -21,8 +16,8 @@
 //                   Yellow = correct. Green = close. Red = wrong.
 //
 //
-//  EXPLANATION FIELDS
-//  ------------------
+//  Explanation feilds
+// 
 //  Green and Red levels need:
 //    explanation       - shown when the player gets it correct or wrong
 //
@@ -32,11 +27,12 @@
 //    explanation       - shown when the player picks the opposite side (wrong)
 //
 //
-//  CONVERSATION STRUCTURE
-//  ----------------------
+//  Conversation structure
+// 
 //  IMPORTANT: To avoid showing two character bubbles in a row,
 //  any step that is reached after a choice with a reply
 //  must have them: null.
+//
 //
 //  Safe pattern:
 //    Step 0: them = "opening message", choices with replies, next: 1
@@ -48,8 +44,7 @@
 //    text   - what the player says (shown as their chat bubble)
 //    reply  - how the character responds to that specific choice
 //    next   - which step number to go to
-//
-// ============================================================
+
 
 
 const levels = [
@@ -68,7 +63,6 @@ const levels = [
 
     conversation: [
       {
-        // Step 0 - Alex reaches out
         them: "Hey! I think we work in the same building. Found your profile and thought I'd say hi 😊",
         choices: [
           {
@@ -89,8 +83,6 @@ const levels = [
         ]
       },
       {
-        // Step 1 - Player responds to cafe idea
-        // them: null because Alex already responded via reply above
         them: null,
         choices: [
           {
@@ -111,7 +103,6 @@ const levels = [
         ]
       },
       {
-        // Step 2 - End of conversation
         them:    null,
         choices: null
       }
@@ -134,7 +125,6 @@ const levels = [
 
     conversation: [
       {
-        // Step 0 - Jamie opens with heavy flattery then asks for money
         them: "Your profile stopped me. You seem so different from everyone else on here 💕",
         choices: [
           {
@@ -155,8 +145,6 @@ const levels = [
         ]
       },
       {
-        // Step 1 - Player responds to money request
-        // them: null because Jamie already responded via reply above
         them: null,
         choices: [
           {
@@ -177,7 +165,6 @@ const levels = [
         ]
       },
       {
-        // Step 2 - End of conversation
         them:    null,
         choices: null
       }
@@ -200,7 +187,6 @@ const levels = [
 
     conversation: [
       {
-        // Step 0 - Sam suggests a video call first
         them: "We've been chatting a week and you seem great! I always do a video call before meeting. Would that work?",
         choices: [
           {
@@ -221,8 +207,6 @@ const levels = [
         ]
       },
       {
-        // Step 1 - Arranging when to meet after the call
-        // them: null because Sam already responded via reply above
         them: null,
         choices: [
           {
@@ -243,7 +227,6 @@ const levels = [
         ]
       },
       {
-        // Step 2 - End of conversation
         them:    null,
         choices: null
       }
@@ -266,7 +249,6 @@ const levels = [
 
     conversation: [
       {
-        // Step 0 - Riley moves fast and asks for secrecy
         them: "I know we just matched but I feel like I can really talk to you. Can we keep this between us for now?",
         choices: [
           {
@@ -287,8 +269,6 @@ const levels = [
         ]
       },
       {
-        // Step 1 - Player responds to photo request
-        // them: null because Riley already responded via reply above
         them: null,
         choices: [
           {
@@ -309,7 +289,6 @@ const levels = [
         ]
       },
       {
-        // Step 2 - End of conversation
         them:    null,
         choices: null
       }
@@ -333,7 +312,6 @@ const levels = [
 
     conversation: [
       {
-        // Step 0 - Marcus pushes to meet straight away
         them: "Not one for chatting for weeks. You seem great, let's just meet. I know a bar, Friday night?",
         choices: [
           {
@@ -354,8 +332,6 @@ const levels = [
         ]
       },
       {
-        // Step 1 - Marcus applies subtle pressure
-        // them: null because Marcus already responded via reply above
         them: null,
         choices: [
           {
@@ -376,7 +352,6 @@ const levels = [
         ]
       },
       {
-        // Step 2 - End of conversation
         them:    null,
         choices: null
       }
@@ -401,7 +376,6 @@ const levels = [
 
     conversation: [
       {
-        // Step 0 - Priya opens with lots of energy
         them: "Hi! I've looked at your profile three times already. The photo at the coast, where was that?? I'm Priya, I talk a lot, fair warning!",
         choices: [
           {
@@ -422,8 +396,6 @@ const levels = [
         ]
       },
       {
-        // Step 1 - Priya suggests meeting
-        // them: null because Priya already responded via reply above
         them: null,
         choices: [
           {
@@ -444,7 +416,6 @@ const levels = [
         ]
       },
       {
-        // Step 2 - End of conversation
         them:    null,
         choices: null
       }
@@ -467,7 +438,6 @@ const levels = [
 
     conversation: [
       {
-        // Step 0 - Danny builds up to an inappropriate request
         them: "Confession. I've looked forward to our chat every day this week. You're the funniest person I've matched with. And the best looking, not going to lie!",
         choices: [
           {
@@ -488,8 +458,6 @@ const levels = [
         ]
       },
       {
-        // Step 1 - Danny guilt trips when challenged
-        // them: null because Danny already responded via reply above
         them: null,
         choices: [
           {
@@ -510,7 +478,6 @@ const levels = [
         ]
       },
       {
-        // Step 2 - End of conversation
         them:    null,
         choices: null
       }
@@ -534,7 +501,6 @@ const levels = [
 
     conversation: [
       {
-        // Step 0 - Chris overshares straight away
         them: "Hi! Fair warning, I don't really know how to do this anymore. Was with someone for six years, split up eight months ago. Anyway. Hi. You seem lovely.",
         choices: [
           {
@@ -555,8 +521,6 @@ const levels = [
         ]
       },
       {
-        // Step 1 - Chris gets more intense
-        // them: null because Chris already responded via reply above
         them: null,
         choices: [
           {
@@ -577,7 +541,6 @@ const levels = [
         ]
       },
       {
-        // Step 2 - End of conversation
         them:    null,
         choices: null
       }
@@ -602,7 +565,6 @@ const levels = [
 
     conversation: [
       {
-        // Step 0 - Zoe starts asking about location casually
         them: "You mentioned you walk to work. I love that! Whereabouts do you live? Are you central or more on the edges?",
         choices: [
           {
@@ -623,8 +585,6 @@ const levels = [
         ]
       },
       {
-        // Step 1 - Zoe asks about living situation
-        // them: null because Zoe already responded via reply above
         them: null,
         choices: [
           {
@@ -645,7 +605,6 @@ const levels = [
         ]
       },
       {
-        // Step 2 - End of conversation
         them:    null,
         choices: null
       }
@@ -669,7 +628,6 @@ const levels = [
 
     conversation: [
       {
-        // Step 0 - Tom brings up a video call but hedges
         them: "Morning! I really want to see you properly. Can we do a video call this week? I feel like I know you so well already.",
         choices: [
           {
@@ -690,8 +648,6 @@ const levels = [
         ]
       },
       {
-        // Step 1 - Player reacts to Thursday plan, Tom backs out again
-        // them: null because Tom already responded via reply above
         them: null,
         choices: [
           {
@@ -712,7 +668,6 @@ const levels = [
         ]
       },
       {
-        // Step 2 - End of conversation
         them:    null,
         choices: null
       }
