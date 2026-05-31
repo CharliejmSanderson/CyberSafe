@@ -1,17 +1,18 @@
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Bullying Roleplay</title>
-
-  <link rel="stylesheet" href="bullying-style.css" />
+  <link rel="stylesheet" href="bullying-style.css">
 </head>
 
 <body class="theme-default">
+
   <div class="app">
 
-    <header class="topbar">
+    <!-- main top bar -->
+    <div class="topbar">
       <button id="hubBtn" class="icon-btn">🏠</button>
       <h1>Bullying Roleplay</h1>
 
@@ -20,32 +21,36 @@
         <button id="stopSpeechBtn" class="icon-btn">⏹</button>
         <button id="settingsBtn" class="icon-btn">⚙</button>
       </div>
-    </header>
+    </div>
 
-    <section id="homeScreen" class="home-screen active">
+    <!-- first screen -->
+    <div id="homeScreen" class="home-screen active">
       <div class="chat-logo">CHAT</div>
 
       <div class="home-text">
         <h2>Let's Roleplay!!!</h2>
-        <p>Swipe or press start to see your conversations!</p>
+        <p>Press start to see your conversations!</p>
       </div>
 
       <button id="startBtn" class="start-btn">Start Chat</button>
-    </section>
+    </div>
 
-    <section id="listScreen" class="list-screen">
-      <div class="contact-list" id="contactList"></div>
+    <!-- chat list screen -->
+    <div id="listScreen" class="list-screen">
+      <div id="contactList" class="contact-list"></div>
 
       <div class="bottom-nav">
         <button id="chatTab" class="bottom-btn active">CHAT</button>
         <button id="exitToHubBtn" class="bottom-btn">EXIT</button>
       </div>
-    </section>
+    </div>
 
-    <section id="chatScreen" class="chat-screen">
+    <!-- actual chat screen -->
+    <div id="chatScreen" class="chat-screen">
       <div class="chat-header">
         <button id="backToListBtn" class="icon-btn">←</button>
-        <div class="avatar-small" id="chatAvatar">🦊</div>
+
+        <div id="chatAvatar" class="avatar-small">🦊</div>
         <h2 id="chatName">Sir Sly Paws</h2>
 
         <div class="chat-icons">
@@ -66,13 +71,14 @@
 
       <div class="message-input">
         <span>📎</span>
-        <input type="text" placeholder="Type a message..." disabled />
+        <input type="text" placeholder="Type a message..." disabled>
         <span>➤</span>
       </div>
-    </section>
+    </div>
 
   </div>
 
+  <!-- settings box -->
   <div id="settingsModal" class="modal">
     <div class="modal-box">
       <button id="closeSettings" class="close-btn">×</button>
@@ -80,25 +86,12 @@
       <h2>Settings</h2>
 
       <h3>Theme</h3>
-
-      <button class="theme-option active" data-theme="default">
-        Default
-      </button>
-
-      <button class="theme-option" data-theme="dark">
-        High Contrast Dark
-      </button>
-
-      <button class="theme-option" data-theme="light">
-        High Contrast Light
-      </button>
-
-      <button class="theme-option" data-theme="blueyellow">
-        Blue–Yellow Accessible
-      </button>
+      <button class="theme-option active" data-theme="default">Default</button>
+      <button class="theme-option" data-theme="dark">High Contrast Dark</button>
+      <button class="theme-option" data-theme="light">High Contrast Light</button>
+      <button class="theme-option" data-theme="blueyellow">Blue-Yellow Accessible</button>
 
       <h3>Text Size</h3>
-
       <div class="size-options">
         <button class="size-option" data-scale="0.85">Small</button>
         <button class="size-option active" data-scale="1">Medium</button>
@@ -107,7 +100,7 @@
       </div>
 
       <label class="tts-row">
-        <input type="checkbox" id="ttsToggle" />
+        <input type="checkbox" id="ttsToggle">
         Text-to-speech feedback
       </label>
     </div>
