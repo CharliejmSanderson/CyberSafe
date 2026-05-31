@@ -2,16 +2,22 @@ const bgm = document.getElementById("bgm");
 const musicToggleBtn = document.getElementById("musicToggleBtn");
 
 let musicOn = localStorage.getItem("musicOn") === "true";
+let needsResumeTap = false;
 
 function startMusic() {
   if (!bgm || !musicOn) return;
 
   bgm.volume = 0.25;
 
-  bgm.play().catch(() => {
-    // Browser may require one tap after returning to the menu
-    musicToggleBtn.textContent = "🎵 Tap to Resume Music";
-  });
+  bgm.play()
+    .then(() => {
+      needsResumeTap = false;
+      musicToggleBtn.textContent = "🔇 Turn Off Music";
+    })
+    .catch(() => {
+      needsResumeTap = true;
+      musicToggleBtn.textContent = "🎵 Tap to Resume Music";
+    });
 }
 
 function stopMusic() {
@@ -22,19 +28,28 @@ function stopMusic() {
 function updateMusicButton() {
   if (!musicToggleBtn) return;
 
-  musicToggleBtn.textContent = musicOn
-    ? "🔇 Turn Off Music"
-    : "🎵 Turn On Music";
+  if (needsResumeTap && musicOn) {
+    musicToggleBtn.textContent = "🎵 Tap to Resume Music";
+  } else {
+    musicToggleBtn.textContent = musicOn
+      ? "🔇 Turn Off Music"
+      : "🎵 Turn On Music";
+  }
 }
 
 function toggleMusic() {
+  if (needsResumeTap && musicOn) {
+    startMusic();
+    return;
+  }
+
   musicOn = !musicOn;
   localStorage.setItem("musicOn", musicOn);
 
   if (musicOn) {
-    updateMusicButton();
     startMusic();
   } else {
+    needsResumeTap = false;
     stopMusic();
     updateMusicButton();
   }
@@ -45,7 +60,10 @@ if (musicToggleBtn) {
 }
 
 updateMusicButton();
-startMusic();
+
+if (musicOn) {
+  startMusic();
+}
 
 function launchGame(path) {
   stopSpeech();
