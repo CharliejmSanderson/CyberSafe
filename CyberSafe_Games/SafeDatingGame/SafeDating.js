@@ -22,6 +22,7 @@ function getAudioCtx() {
 function playSound(type) {
   if (!window.AudioContext && !window.webkitAudioContext) return;
   const ctx = getAudioCtx();
+  const vol = getVolume();
 
   if (type === 'message') {
     const osc  = ctx.createOscillator();
@@ -30,7 +31,7 @@ function playSound(type) {
     osc.type = 'sine';
     osc.frequency.setValueAtTime(880, ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.08);
-    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.setValueAtTime(vol * 0.5, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
     osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.14);
 
@@ -41,7 +42,7 @@ function playSound(type) {
       osc.connect(gain); gain.connect(ctx.destination);
       osc.type = 'sine'; osc.frequency.value = freq;
       const t = ctx.currentTime + i * 0.14;
-      gain.gain.setValueAtTime(0.3, t);
+      gain.gain.setValueAtTime(vol * 0.6, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
       osc.start(t); osc.stop(t + 0.4);
     });
@@ -53,7 +54,7 @@ function playSound(type) {
     osc.type = 'sine';
     osc.frequency.setValueAtTime(220, ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.3);
-    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.setValueAtTime(vol * 0.5, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
     osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.35);
   }
@@ -107,23 +108,37 @@ document.getElementById('settingsOverlay').addEventListener('click', function(e)
 function setTheme(theme, btn) {
   document.body.classList.remove('theme-dark', 'theme-light', 'theme-blueyellow');
   if (theme !== 'default') document.body.classList.add('theme-' + theme);
-
   document.querySelectorAll('#settingsOverlay .setting-option[id^="theme-"]')
-    .forEach(b => b.classList.remove('active'));
+    .forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
+  saveSettings('theme', theme);
 }
 
 function setTextSize(btn) {
-  const scale = btn.dataset.scale;
-  document.documentElement.style.setProperty('--font-scale', scale);
-
+  var scale = btn.dataset.scale;
+  applyFontScale(scale);
   document.querySelectorAll('#settingsOverlay .size-grid .setting-option')
-    .forEach(b => b.classList.remove('active'));
+    .forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
+  saveSettings('fontScale', scale);
+}
+
+function onVolumeChange(val) {
+  saveSettings('volume', val);
+}
+
+function applySettings() {
+  var s = loadSettings();
+  document.body.classList.remove('theme-dark', 'theme-light', 'theme-blueyellow');
+  if (s.theme !== 'default') document.body.classList.add('theme-' + s.theme);
+  applyFontScale(s.fontScale);
+  syncSettingsUI(s);
 }
 
 function handleTtsToggle() {
-  if (!isTtsOn()) stopSpeech();
+  var on = isTtsOn();
+  saveSettings('ttsOn', on);
+  if (!on) stopSpeech();
 }
 
 function isTtsOn() {
@@ -525,4 +540,5 @@ function showResult(result, playerChoice) {
 // ============================================================
 //  START THE GAME
 // ============================================================
+applySettings();
 showHome();
