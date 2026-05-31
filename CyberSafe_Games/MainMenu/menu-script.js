@@ -1,7 +1,7 @@
 const bgm = document.getElementById("bgm");
 const musicToggleBtn = document.getElementById("musicToggleBtn");
 
-let musicOn = true;
+let musicOn = false;
 
 function startMusic() {
   if (!bgm || !musicOn) return;
@@ -21,10 +21,10 @@ function toggleMusic() {
   musicOn = !musicOn;
 
   if (musicOn) {
-    musicToggleBtn.textContent = "🔇 Turn Off Music";
+    musicToggleBtn.textContent = "🔇 Turn Off Music"; 
     startMusic();
   } else {
-    musicToggleBtn.textContent = "🔊 Turn On Music";
+    musicToggleBtn.textContent = "🎵 Turn On Music";
     stopMusic();
   }
 }
