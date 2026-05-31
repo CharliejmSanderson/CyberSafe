@@ -40,6 +40,7 @@ function launchGame(path) {
 }
 
 function speakText(text) {
+  stopMusic();
   if (!("speechSynthesis" in window)) {
     alert("Text-to-speech is not supported on this browser.");
     return;
@@ -57,6 +58,7 @@ function speakText(text) {
 }
 
 function stopSpeech() {
+  startMusic();
   if ("speechSynthesis" in window) {
     window.speechSynthesis.cancel();
   }
