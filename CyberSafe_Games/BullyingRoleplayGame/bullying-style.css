@@ -586,3 +586,23 @@ body.theme-dark .contact-card h3 {
 body.theme-dark .contact-card p {
     color: #d0d0d0;
 }
+
+/* DARK THEME CHAT TEXT FIX */
+
+body.theme-dark .message-left {
+    background: #ffffff;
+    color: #000000;
+}
+
+body.theme-dark .message-left div {
+    color: #000000;
+}
+
+body.theme-dark .message-right {
+    background: #2faf8d;
+    color: #ffffff;
+}
+
+body.theme-dark .choice-btn {
+    color: #000000;
+}
