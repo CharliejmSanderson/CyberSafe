@@ -205,3 +205,11 @@ body {
     font-size: 11px;
   }
 }
+#musicToggleBtn {
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
