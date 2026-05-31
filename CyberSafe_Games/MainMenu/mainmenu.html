@@ -1,26 +1,25 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Cyber Safety Game Hub</title>
-
-  <link rel="stylesheet" href="menu-style.css" />
+  <link rel="stylesheet" href="menu-style.css">
 </head>
+
 <body>
   <main class="container">
 
+    <!-- Text to speech buttons -->
     <div class="speech-controls">
       <button onclick="speakIntro()">🔊 Listen</button>
       <button onclick="stopSpeech()">⏹ Stop</button>
     </div>
 
     <p class="subtitle">SELECT YOUR GAME</p>
-
     <h1 class="title">GAME HUB</h1>
 
-    <section class="games">
+    <div class="games">
 
       <button class="card blue" onclick="launchGame('../BullyingRoleplayGame/BullyingRoleplay.html')">
         <div class="emoji">🛡️</div>
@@ -52,7 +51,7 @@
         <p>Decide what is safe to post online.</p>
       </button>
 
-    </section>
+    </div>
 
     <p class="footer">CLICK A CARD TO LAUNCH</p>
 
