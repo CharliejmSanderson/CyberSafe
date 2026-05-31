@@ -34,6 +34,8 @@ let round = 1;
 let completedChats = [];
 let lastSpokenText = "";
 
+const MAIN_MENU_PATH = "../MainMenu/mainmenu.html";
+
 const contacts = [
   {
     id: 1,
@@ -249,7 +251,6 @@ function showScreen(screen) {
   homeScreen.classList.remove("active");
   listScreen.classList.remove("active");
   chatScreen.classList.remove("active");
-
   screen.classList.add("active");
 }
 
@@ -271,7 +272,6 @@ function renderContactList() {
     `;
 
     card.addEventListener("click", () => openChat(contact));
-
     contactList.appendChild(card);
   });
 }
@@ -290,9 +290,7 @@ function openChat(contact) {
   tipBox.classList.add("hidden");
 
   addMessage(contact.firstMessage, "left");
-
   renderChoices(contact.choices1);
-
   showScreen(chatScreen);
 }
 
@@ -301,12 +299,9 @@ function renderChoices(choices) {
 
   choices.forEach((choice) => {
     const btn = document.createElement("button");
-
     btn.className = `choice-btn choice-${choice.type}`;
     btn.textContent = choice.text;
-
     btn.addEventListener("click", () => handleChoice(choice));
-
     choiceArea.appendChild(btn);
   });
 }
@@ -434,12 +429,12 @@ function stopSpeech() {
 
 hubBtn.addEventListener("click", () => {
   stopSpeech();
-  window.location.href = "../mainmenu.html";
+  window.location.href = MAIN_MENU_PATH;
 });
 
 exitToHubBtn.addEventListener("click", () => {
   stopSpeech();
-  window.location.href = "../mainmenu.html";
+  window.location.href = MAIN_MENU_PATH;
 });
 
 startBtn.addEventListener("click", () => {
@@ -502,7 +497,6 @@ themeButtons.forEach((button) => {
 sizeButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const scale = button.dataset.scale;
-
     document.documentElement.style.setProperty("--font-scale", scale);
 
     sizeButtons.forEach((btn) => btn.classList.remove("active"));
