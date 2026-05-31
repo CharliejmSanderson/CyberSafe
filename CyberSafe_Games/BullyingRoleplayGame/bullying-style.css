@@ -488,11 +488,62 @@ body{
     --text:#000;
 }
 
-.theme-blueyellow{
-    --bg:#d7ecff;
-    --card:#fff7c2;
-    --topbar:#0048b3;
-    --text:#111;
+.theme-blueyellow {
+    --bg: #0b1f3a;
+    --card: #fff4b8;
+    --topbar: #ffcc00;
+    --text: #ffffff;
+    --input: #ffffff;
+}
+/* BLUE-YELLOW ACCESSIBLE FIX */
+
+body.theme-blueyellow .topbar,
+body.theme-blueyellow .chat-header {
+    background: #ffcc00;
+    color: #0b1f3a;
+}
+
+body.theme-blueyellow .icon-btn,
+body.theme-blueyellow .topbar h1,
+body.theme-blueyellow .chat-header h2,
+body.theme-blueyellow .chat-icons {
+    color: #0b1f3a;
+}
+
+body.theme-blueyellow .modal-box {
+    background: #0b1f3a;
+    color: #ffffff;
+    border: 2px solid #ffcc00;
+}
+
+body.theme-blueyellow .theme-option,
+body.theme-blueyellow .size-option {
+    background: #fff4b8;
+    color: #0b1f3a;
+}
+
+body.theme-blueyellow .theme-option.active,
+body.theme-blueyellow .size-option.active {
+    background: #ffcc00;
+    color: #0b1f3a;
+}
+
+body.theme-blueyellow .contact-card,
+body.theme-blueyellow .message-left,
+body.theme-blueyellow .message-input,
+body.theme-blueyellow .message-input input {
+    background: #fff4b8;
+    color: #0b1f3a;
+}
+
+body.theme-blueyellow .message-right {
+    background: #ffcc00;
+    color: #0b1f3a;
+}
+
+body.theme-blueyellow .tip-box {
+    background: #ffcc00;
+    color: #0b1f3a;
 }
 
 /* MOBILE */
