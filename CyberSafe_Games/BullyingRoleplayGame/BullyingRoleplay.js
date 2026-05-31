@@ -80,9 +80,13 @@ function closeSettings() {
   document.getElementById('settingsOverlay').classList.remove('active');
 }
 
-document.getElementById('settingsOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeSettings();
-});
+const settingsOverlay = document.getElementById('settingsOverlay');
+
+if (settingsOverlay) {
+  settingsOverlay.addEventListener('click', function(e) {
+    if (e.target === this) closeSettings();
+  });
+}
 
 //
 // THEME FIX (APPLIES TO MOBILE FRAME)
