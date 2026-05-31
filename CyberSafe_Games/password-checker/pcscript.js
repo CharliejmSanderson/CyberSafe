@@ -67,7 +67,14 @@ function isTtsOn() {
 
 function speakText(text) {
   if (!("speechSynthesis" in window)) return;
-  const speech    = new SpeechSynthesisUtterance(text);
+
+  // Remove emojis before speaking
+  const cleanText = text.replace(
+    /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,
+    ""
+
+  );  
+  const speech    = new SpeechSynthesisUtterance(cleantext);
   speech.lang     = "en-AU";
   speech.rate     = 0.85;
   speech.pitch    = 1;
