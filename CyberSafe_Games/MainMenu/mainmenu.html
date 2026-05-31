@@ -3,51 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Cyber Safety Game Hub</title>
-
   <link rel="stylesheet" href="menu-style.css" />
 </head>
 <body>
   <main class="container">
 
     <div class="speech-controls">
-      <button onclick="speakIntro()">🔊 Listen</button>
-      <button onclick="stopSpeech()">⏹ Stop</button>
+      <button onclick="speakIntro()">&#128266; Listen</button>
+      <button onclick="stopSpeech()">&#9209; Stop</button>
+      <button onclick="openSettings()" aria-label="Settings">&#9881;&#65039; Settings</button>
     </div>
 
     <p class="subtitle">SELECT YOUR GAME</p>
-
     <h1 class="title">GAME HUB</h1>
 
     <section class="games">
 
       <button class="card blue" onclick="launchGame('../BullyingRoleplayGame/BullyingRoleplay.html')">
-        <div class="emoji">🛡️</div>
+        <div class="emoji">&#128737;&#65039;</div>
         <h2>Bullying<br>Roleplay</h2>
         <p>Practice safe responses to online bullying.</p>
       </button>
 
       <button class="card pink" onclick="launchGame('../SafeDatingGame/SafeDating.html')">
-        <div class="emoji">💕</div>
+        <div class="emoji">&#128149;</div>
         <h2>Online Dating<br>Safety</h2>
         <p>Learn safe choices in online dating chats.</p>
       </button>
 
       <button class="card green" onclick="launchGame('../password-checker/passwordchecker.html')">
-        <div class="emoji">🔐</div>
+        <div class="emoji">&#128272;</div>
         <h2>Password<br>Checker</h2>
         <p>Check password strength and improve it.</p>
       </button>
 
       <button class="card orange" onclick="launchGame('../SpotTheScam/SpotTheScam.html')">
-        <div class="emoji">🔍</div>
+        <div class="emoji">&#128269;</div>
         <h2>Spot The<br>Scam</h2>
         <p>Find fake messages, emails, and scams.</p>
       </button>
 
       <button class="card purple" onclick="launchGame('../SafePostingOnlineGame/SafePosting.html')">
-        <div class="emoji">📱</div>
+        <div class="emoji">&#128241;</div>
         <h2>Safe Posting<br>Online</h2>
         <p>Decide what is safe to post online.</p>
       </button>
@@ -58,6 +56,31 @@
 
   </main>
 
+  <!-- SETTINGS MODAL -->
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-sheet">
+
+      <button class="settings-close-btn" onclick="closeSettings()" aria-label="Close settings">&#215;</button>
+      <div class="settings-title">Settings</div>
+
+      <div class="settings-section">Theme</div>
+      <button class="setting-option active" id="theme-default"    onclick="setTheme('default',this)">Default</button>
+      <button class="setting-option" id="theme-dark"              onclick="setTheme('dark',this)">High Contrast Dark</button>
+      <button class="setting-option" id="theme-light"             onclick="setTheme('light',this)">High Contrast Light</button>
+      <button class="setting-option" id="theme-blueyellow"        onclick="setTheme('blueyellow',this)">Blue&#8211;Yellow Accessible</button>
+
+      <div class="settings-section">Text Size</div>
+      <div class="size-grid">
+        <button class="setting-option" data-scale="0.85" onclick="setTextSize(this)">Small</button>
+        <button class="setting-option active" data-scale="1" onclick="setTextSize(this)">Medium</button>
+        <button class="setting-option" data-scale="1.2" onclick="setTextSize(this)">Large</button>
+        <button class="setting-option" data-scale="1.4" onclick="setTextSize(this)">Extra Large</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../settings.js"></script>
   <script src="menu-script.js"></script>
 </body>
 </html>
