@@ -43,6 +43,42 @@ let scenarios = [
 
 ];
 
+/* SOUNDS */
+
+let _audioCtx = null;
+function getAudioCtx() {
+  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (_audioCtx.state === 'suspended') _audioCtx.resume();
+  return _audioCtx;
+}
+
+function playSound(type) {
+  if (!window.AudioContext && !window.webkitAudioContext) return;
+  const ctx = getAudioCtx();
+  if (type === 'correct') {
+    [523.25, 659.25].forEach(function(freq, i) {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine'; osc.frequency.value = freq;
+      const t = ctx.currentTime + i * 0.14;
+      gain.gain.setValueAtTime(0.3, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      osc.start(t); osc.stop(t + 0.4);
+    });
+  } else if (type === 'wrong') {
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(220, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.3);
+    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.35);
+  }
+}
+
 /* TTS */
 
 function isTtsOn(){
@@ -161,6 +197,9 @@ attempts.push({
 
 if(correct){
     score++;
+    playSound('correct');
+} else {
+    playSound('wrong');
 }
 
 const resultText = (correct ? "Correct!" : "Oops!") + " " + current.reason;
