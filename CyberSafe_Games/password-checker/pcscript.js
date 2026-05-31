@@ -133,9 +133,57 @@ sizeButtons.forEach((button) => {
   });
 });
 
+/* SOUNDS */
+
+function playSound(type) {
+  if (!window.AudioContext && !window.webkitAudioContext) return;
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+  if (type === 'typing') {
+    /* quiet key tap */
+    const buf  = ctx.createBuffer(1, ctx.sampleRate * 0.04, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+    const src  = ctx.createBufferSource();
+    const gain = ctx.createGain();
+    src.buffer = buf;
+    src.connect(gain); gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    src.start();
+
+  } else if (type === 'correct') {
+    /* pleasant two-note chime */
+    [523.25, 659.25].forEach(function(freq, i) {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine'; osc.frequency.value = freq;
+      const t = ctx.currentTime + i * 0.14;
+      gain.gain.setValueAtTime(0.2, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+      osc.start(t); osc.stop(t + 0.35);
+    });
+
+  } else if (type === 'wrong') {
+    /* low soft thud */
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(220, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.25);
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.3);
+  }
+}
+
+let lastScore = -1;
+
 /* PASSWORD INPUT */
 
 passwordInput.addEventListener("input", () => {
+  playSound('typing');
   checkPassword(passwordInput.value);
 });
 
@@ -176,18 +224,21 @@ function updateUI(score, password, tips) {
     time  = "&#9888;&#65039; Instant to crack";
     title = "&#128517; Come on, you can do better!!";
     message.classList.add("weak-text");
+    if (score !== lastScore) { playSound('wrong'); lastScore = score; }
   } else if (score === 2 || score === 3) {
     percent = 55; barColor = "#d9b15c";
     msg   = "&#9889; Not bad, but it still needs improvement.";
     time  = "&#128336; Could take a few hours to crack";
     title = "&#128578; Almost there";
     message.classList.add("medium-text");
+    if (score !== lastScore) { lastScore = score; }
   } else {
     percent = 100; barColor = "#8ccf8a";
     msg   = "&#9989; Nice! Your password is pretty good!";
     time  = "&#128737;&#65039; " + estimateCrackTime(password);
     title = "&#127881; Great job! Keep it up!";
     message.classList.add("good-text");
+    if (score !== lastScore) { playSound('correct'); lastScore = score; }
   }
 
   strengthBar.style.width      = percent + "%";
