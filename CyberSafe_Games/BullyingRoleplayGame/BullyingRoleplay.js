@@ -71,47 +71,41 @@ function showHome() {
 //
 // SETTINGS
 //
+
 function openSettings() {
-  document.getElementById("screen").innerHTML = `
-    ${topBar("Settings")}
-
-    <div style="padding:15px;">
-
-      <h3>Color Theme</h3>
-
-      <div class="setting-option" onclick="setTheme('green')">🟢 Green (Default)</div>
-      <div class="setting-option" onclick="setTheme('dark')">⚫ High Contrast Dark</div>
-      <div class="setting-option" onclick="setTheme('light')">🔵 High Contrast Light</div>
-      <div class="setting-option" onclick="setTheme('yellow')">🟡 Blue-Yellow Accessible</div>
-
-      <br>
-
-      <button class="reply-btn" onclick="showHome()">Close</button>
-    </div>
-  `;
+  document.getElementById('settingsOverlay').classList.add('active');
 }
+
+function closeSettings() {
+  document.getElementById('settingsOverlay').classList.remove('active');
+}
+
+document.getElementById('settingsOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeSettings();
+});
 
 //
 // THEME FIX (APPLIES TO MOBILE FRAME)
 //
-function setTheme(theme) {
-  let phone = document.querySelector(".phone");
+function setTheme(theme, btn) {
+  document.body.classList.remove('theme-dark', 'theme-light', 'theme-blueyellow');
+  if (theme !== 'default') document.body.classList.add('theme-' + theme);
 
-  phone.classList.remove("dark-theme", "light-theme", "yellow-theme");
+  document.querySelectorAll('#settingsOverlay .setting-option[id^="theme-"]')
+    .forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
 
-  if (theme === "dark") {
-    phone.classList.add("dark-theme");
-  }
+//
+//TEXT SIZE 
+// 
+function setTextSize(btn) {
+  const scale = btn.dataset.scale;
+  document.documentElement.style.setProperty('--font-scale', scale);
 
-  if (theme === "light") {
-    phone.classList.add("light-theme");
-  }
-
-  if (theme === "yellow") {
-    phone.classList.add("yellow-theme");
-  }
-
-  // green = default (no class)
+  document.querySelectorAll('#settingsOverlay .size-grid .setting-option')
+    .forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 }
 
 //
