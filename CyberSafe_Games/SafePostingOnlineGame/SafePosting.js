@@ -55,6 +55,7 @@ function getAudioCtx() {
 function playSound(type) {
   if (!window.AudioContext && !window.webkitAudioContext) return;
   const ctx = getAudioCtx();
+  const vol = getVolume();
   if (type === 'correct') {
     [523.25, 659.25].forEach(function(freq, i) {
       const osc  = ctx.createOscillator();
@@ -62,7 +63,7 @@ function playSound(type) {
       osc.connect(gain); gain.connect(ctx.destination);
       osc.type = 'sine'; osc.frequency.value = freq;
       const t = ctx.currentTime + i * 0.14;
-      gain.gain.setValueAtTime(0.3, t);
+      gain.gain.setValueAtTime(vol * 0.6, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
       osc.start(t); osc.stop(t + 0.4);
     });
@@ -73,7 +74,7 @@ function playSound(type) {
     osc.type = 'sine';
     osc.frequency.setValueAtTime(220, ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.3);
-    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.setValueAtTime(vol * 0.5, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
     osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.35);
   }
@@ -99,7 +100,9 @@ function stopSpeech(){
 }
 
 function handleTtsToggle(){
-    if(!isTtsOn()) stopSpeech();
+    var on = isTtsOn();
+    saveSettings('ttsOn', on);
+    if(!on) stopSpeech();
 }
 
 /* TOP BAR */
@@ -356,42 +359,40 @@ document.getElementById('settingsOverlay') && document.getElementById('settingsO
 }
 /* THEME */
 function setTheme(theme){
-
-let phone =
-document.querySelector(".phone");
-
-/* REMOVE OLD THEMES */
-phone.classList.remove(
-"dark-theme",
-"contrast-dark",
-"contrast-light",
-"blue-yellow"
-);
-
-/* APPLY THEME */
-if(theme === "dark"){
-    phone.classList.add("dark-theme");
-}
-
-if(theme === "contrast-dark"){
-    phone.classList.add("contrast-dark");
-}
-
-if(theme === "contrast-light"){
-    phone.classList.add("contrast-light");
-}
-
-if(theme === "blue-yellow"){
-    phone.classList.add("blue-yellow");
-}
+  var phone = document.querySelector('.phone');
+  phone.classList.remove('dark-theme','contrast-dark','contrast-light','blue-yellow');
+  var map = { dark:'dark-theme', light:'contrast-light', blueyellow:'blue-yellow' };
+  if(map[theme]) phone.classList.add(map[theme]);
+  document.querySelectorAll('[id^="theme-"]').forEach(function(b){ b.classList.remove('active'); });
+  var btn = document.getElementById('theme-' + theme);
+  if(btn) btn.classList.add('active');
+  saveSettings('theme', theme);
 }
 
 /* TEXT SIZE */
-function setTextSize(size){
+function setTextSize(size, btn){
+  var scaleMap = { small:0.85, medium:1, large:1.2, xlarge:1.4 };
+  var scale = scaleMap[size] || 1;
+  applyFontScale(scale);
+  document.querySelectorAll('.settings-size-grid .settings-btn').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  saveSettings('fontScale', scale);
+}
 
-const scaleMap = { small:0.85, medium:1, large:1.2, xlarge:1.4 };
-document.documentElement.style.setProperty('--font-scale', scaleMap[size] || 1);
+function onVolumeChange(val){
+  saveSettings('volume', val);
+}
+
+function applySettings(){
+  var s = loadSettings();
+  var phone = document.querySelector('.phone');
+  phone.classList.remove('dark-theme','contrast-dark','contrast-light','blue-yellow');
+  var map = { dark:'dark-theme', light:'contrast-light', blueyellow:'blue-yellow' };
+  if(map[s.theme]) phone.classList.add(map[s.theme]);
+  applyFontScale(s.fontScale);
+  syncSettingsUI(s);
 }
 
 /* START */
+applySettings();
 home();
