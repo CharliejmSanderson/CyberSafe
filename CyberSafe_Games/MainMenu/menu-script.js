@@ -33,6 +33,41 @@ function toggleMusic() {
 if (musicToggleBtn) {
     musicToggleBtn.addEventListener("click", toggleMusic);
 }
+/* MUSIC */
+
+const bgm = document.getElementById("bgm");
+const musicToggleBtn = document.getElementById("musicToggleBtn");
+
+let musicOn = false;
+
+function startMusic() {
+    if (!bgm) return;
+
+    bgm.volume = 0.25;
+    bgm.play();
+}
+
+function stopMusic() {
+    if (!bgm) return;
+
+    bgm.pause();
+}
+
+function toggleMusic() {
+    musicOn = !musicOn;
+
+    if (musicOn) {
+        musicToggleBtn.textContent = "🔇 Turn Off Music";
+        startMusic();
+    } else {
+        musicToggleBtn.textContent = "🎵 Turn On Music";
+        stopMusic();
+    }
+}
+
+if (musicToggleBtn) {
+    musicToggleBtn.addEventListener("click", toggleMusic);
+}
 
 function launchGame(path) {
   stopSpeech();
