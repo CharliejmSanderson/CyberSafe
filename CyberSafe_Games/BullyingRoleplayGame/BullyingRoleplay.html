@@ -1,0 +1,118 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Bullying Roleplay</title>
+
+  <link rel="stylesheet" href="bullying-style.css" />
+</head>
+
+<body class="theme-default">
+  <div class="app">
+
+    <header class="topbar">
+      <button id="hubBtn" class="icon-btn">🏠</button>
+      <h1>Bullying Roleplay</h1>
+
+      <div class="top-actions">
+        <button id="speakBtn" class="icon-btn">🔊</button>
+        <button id="stopSpeechBtn" class="icon-btn">⏹</button>
+        <button id="settingsBtn" class="icon-btn">⚙</button>
+      </div>
+    </header>
+
+    <section id="homeScreen" class="home-screen active">
+      <div class="chat-logo">CHAT</div>
+
+      <div class="home-text">
+        <h2>Let's Roleplay!!!</h2>
+        <p>Swipe or press start to see your conversations!</p>
+      </div>
+
+      <button id="startBtn" class="start-btn">Start Chat</button>
+    </section>
+
+    <section id="listScreen" class="list-screen">
+      <div class="contact-list" id="contactList"></div>
+
+      <div class="bottom-nav">
+        <button id="chatTab" class="bottom-btn active">CHAT</button>
+        <button id="exitToHubBtn" class="bottom-btn">EXIT</button>
+      </div>
+    </section>
+
+    <section id="chatScreen" class="chat-screen">
+      <div class="chat-header">
+        <button id="backToListBtn" class="icon-btn">←</button>
+        <div class="avatar-small" id="chatAvatar">🦊</div>
+        <h2 id="chatName">Sir Sly Paws</h2>
+
+        <div class="chat-icons">
+          <span>📞</span>
+          <span>⋮</span>
+        </div>
+      </div>
+
+      <div id="chatArea" class="chat-area"></div>
+
+      <div id="choiceArea" class="choice-area"></div>
+
+      <div id="tipBox" class="tip-box hidden">
+        <span>💡</span>
+        <p id="tipText"></p>
+        <button id="closeTipBtn">×</button>
+      </div>
+
+      <div class="message-input">
+        <span>📎</span>
+        <input type="text" placeholder="Type a message..." disabled />
+        <span>➤</span>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="settingsModal" class="modal">
+    <div class="modal-box">
+      <button id="closeSettings" class="close-btn">×</button>
+
+      <h2>Settings</h2>
+
+      <h3>Theme</h3>
+
+      <button class="theme-option active" data-theme="default">
+        Default
+      </button>
+
+      <button class="theme-option" data-theme="dark">
+        High Contrast Dark
+      </button>
+
+      <button class="theme-option" data-theme="light">
+        High Contrast Light
+      </button>
+
+      <button class="theme-option" data-theme="blueyellow">
+        Blue–Yellow Accessible
+      </button>
+
+      <h3>Text Size</h3>
+
+      <div class="size-options">
+        <button class="size-option" data-scale="0.85">Small</button>
+        <button class="size-option active" data-scale="1">Medium</button>
+        <button class="size-option" data-scale="1.2">Large</button>
+        <button class="size-option" data-scale="1.4">Extra Large</button>
+      </div>
+
+      <label class="tts-row">
+        <input type="checkbox" id="ttsToggle" />
+        Text-to-speech feedback
+      </label>
+    </div>
+  </div>
+
+  <script src="bullying-script.js"></script>
+</body>
+</html>

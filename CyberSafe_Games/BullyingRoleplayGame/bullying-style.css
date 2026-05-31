@@ -1,0 +1,518 @@
+:root{
+    --font-scale:1;
+
+    --bg:#d9e3d5;
+    --card:#ffffff;
+    --topbar:#2faf8d;
+    --text:#222;
+    --input:#f4f4f4;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    font-size:calc(16px * var(--font-scale));
+}
+
+.hidden{
+    display:none !important;
+}
+
+.app{
+    min-height:100vh;
+}
+
+/* TOP BAR */
+
+.topbar{
+    height:70px;
+    background:var(--topbar);
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 15px;
+
+    box-shadow:0 2px 5px rgba(0,0,0,0.15);
+}
+
+.topbar h1{
+    flex:1;
+    margin-left:12px;
+    font-size:1.6rem;
+}
+
+.top-actions{
+    display:flex;
+    gap:8px;
+}
+
+.icon-btn{
+    border:none;
+    background:none;
+    color:inherit;
+    cursor:pointer;
+    font-size:1.5rem;
+}
+
+/* HOME */
+
+.home-screen{
+    display:none;
+    min-height:calc(100vh - 70px);
+
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+
+    text-align:center;
+    padding:30px;
+}
+
+.home-screen.active{
+    display:flex;
+}
+
+.chat-logo{
+    width:130px;
+    height:130px;
+
+    background:var(--topbar);
+    color:white;
+
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:2rem;
+    font-weight:bold;
+
+    margin-bottom:30px;
+}
+
+.home-text h2{
+    margin-bottom:10px;
+}
+
+.home-text p{
+    margin-bottom:25px;
+}
+
+.start-btn{
+    border:none;
+    cursor:pointer;
+
+    padding:14px 30px;
+
+    background:var(--topbar);
+    color:white;
+
+    border-radius:10px;
+
+    font-size:1rem;
+}
+
+/* LIST SCREEN */
+
+.list-screen{
+    display:none;
+    min-height:calc(100vh - 70px);
+}
+
+.list-screen.active{
+    display:block;
+}
+
+.contact-list{
+    padding:20px;
+    padding-bottom:120px;
+}
+
+.contact-card{
+    display:flex;
+    gap:15px;
+
+    background:#f8f8f8;
+
+    margin-bottom:15px;
+
+    border-radius:14px;
+
+    padding:15px;
+
+    cursor:pointer;
+}
+
+.contact-card:hover{
+    background:#ececec;
+}
+
+.avatar{
+    font-size:3rem;
+}
+
+.contact-info h3{
+    margin-bottom:5px;
+}
+
+.contact-info p{
+    color:#555;
+}
+
+/* CHAT SCREEN */
+
+.chat-screen{
+    display:none;
+    min-height:100vh;
+}
+
+.chat-screen.active{
+    display:flex;
+    flex-direction:column;
+}
+
+.chat-header{
+    background:var(--topbar);
+    color:white;
+
+    height:70px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 15px;
+}
+
+.avatar-small{
+    margin-left:10px;
+    margin-right:10px;
+
+    font-size:2rem;
+}
+
+.chat-header h2{
+    flex:1;
+}
+
+.chat-icons{
+    display:flex;
+    gap:15px;
+    font-size:1.4rem;
+}
+
+.chat-area{
+    flex:1;
+
+    padding:15px;
+
+    overflow-y:auto;
+
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+/* BUBBLES */
+
+.message-left{
+    align-self:flex-start;
+
+    background:white;
+
+    padding:12px;
+
+    border-radius:18px;
+
+    max-width:70%;
+
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.message-right{
+    align-self:flex-end;
+
+    background:#32b48f;
+    color:white;
+
+    padding:12px;
+
+    border-radius:18px;
+
+    max-width:70%;
+}
+
+.message-time{
+    margin-top:6px;
+    font-size:0.8rem;
+    opacity:0.75;
+}
+
+/* CHOICE BUTTONS */
+
+.choice-area{
+    padding:15px;
+
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.choice-btn{
+    border:none;
+
+    text-align:left;
+
+    padding:18px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:1rem;
+}
+
+.choice-good{
+    background:#cfeecf;
+}
+
+.choice-warning{
+    background:#f4e2bf;
+}
+
+.choice-bad{
+    background:#f3d0d0;
+}
+
+.choice-btn:hover{
+    filter:brightness(0.96);
+}
+
+/* TIP BOX */
+
+.tip-box{
+    background:#e7e5af;
+
+    padding:15px;
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    border-top:2px solid #ddd;
+}
+
+.tip-box p{
+    flex:1;
+}
+
+.tip-box button{
+    border:none;
+    background:none;
+    cursor:pointer;
+
+    font-size:1.4rem;
+}
+
+/* INPUT BAR */
+
+.message-input{
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    background:#ececec;
+
+    padding:10px;
+}
+
+.message-input input{
+    flex:1;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:20px;
+
+    background:white;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+    position:fixed;
+
+    left:0;
+    right:0;
+    bottom:0;
+
+    display:flex;
+
+    background:var(--topbar);
+}
+
+.bottom-btn{
+    flex:1;
+
+    border:none;
+
+    padding:18px;
+
+    color:white;
+
+    background:transparent;
+
+    cursor:pointer;
+
+    font-size:1.1rem;
+}
+
+.bottom-btn.active{
+    background:rgba(255,255,255,0.15);
+}
+
+/* SETTINGS */
+
+.modal{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,0.4);
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    width:100%;
+    max-width:450px;
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    position:relative;
+}
+
+.close-btn{
+    position:absolute;
+
+    right:15px;
+    top:15px;
+
+    border:none;
+    background:none;
+
+    cursor:pointer;
+
+    font-size:1.5rem;
+}
+
+.modal-box h3{
+    margin-top:20px;
+    margin-bottom:10px;
+}
+
+.theme-option,
+.size-option{
+    width:100%;
+
+    border:none;
+
+    background:#eee;
+
+    margin:6px 0;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+}
+
+.theme-option.active,
+.size-option.active{
+    background:var(--topbar);
+    color:white;
+}
+
+.size-options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.tts-row{
+    display:flex;
+    gap:10px;
+
+    margin-top:20px;
+}
+
+/* THEMES */
+
+.theme-dark{
+    --bg:#111;
+    --card:#222;
+    --topbar:#000;
+    --text:#fff;
+}
+
+.theme-light{
+    --bg:#fff;
+    --card:#fff;
+    --topbar:#0057ff;
+    --text:#000;
+}
+
+.theme-blueyellow{
+    --bg:#d7ecff;
+    --card:#fff7c2;
+    --topbar:#0048b3;
+    --text:#111;
+}
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+    .topbar h1{
+        font-size:1.2rem;
+    }
+
+    .chat-header h2{
+        font-size:1.2rem;
+    }
+
+    .message-left,
+    .message-right{
+        max-width:90%;
+    }
+
+    .contact-card{
+        padding:12px;
+    }
+}
