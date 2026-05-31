@@ -71,9 +71,12 @@ function speakText(text) {
 }
 
 function stopSpeech() {
-  startMusic();
   if ("speechSynthesis" in window) {
     window.speechSynthesis.cancel();
+  }
+
+  if (musicOn) {
+    startMusic();
   }
 }
 
