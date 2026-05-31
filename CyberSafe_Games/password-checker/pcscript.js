@@ -68,17 +68,18 @@ function isTtsOn() {
 function speakText(text) {
   if (!("speechSynthesis" in window)) return;
 
-  // Remove emojis before speaking
-  const cleanText = text.replace(
-    /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,
-    ""
+  // Remove emoji characters before speaking
+  const cleanText = text
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "")
+    .trim();
 
-  );  
-  const speech    = new SpeechSynthesisUtterance(cleantext);
-  speech.lang     = "en-AU";
-  speech.rate     = 0.85;
-  speech.pitch    = 1;
-  speech.volume   = 1;
+  const speech = new SpeechSynthesisUtterance(cleanText);
+
+  speech.lang = "en-AU";
+  speech.rate = 0.85;
+  speech.pitch = 1;
+  speech.volume = 1;
+
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(speech);
 }
