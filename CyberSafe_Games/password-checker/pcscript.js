@@ -227,23 +227,23 @@ function updateUI(score, password, tips) {
 
   if (score <= 1) {
     percent = 20; barColor = "#d97b5c";
-    msg   = "&#10060; Oh no! Password is extremely weak!";
-    time  = "&#9888;&#65039; Instant to crack";
-    title = "&#128517; Come on, you can do better!!";
+    msg   = "❌; Oh no! Password is extremely weak!";
+    time  = "⚠️; Instant to crack";
+    title = "😅 Come on, you can do better!!";
     message.classList.add("weak-text");
     if (score !== lastScore) { playSound('wrong'); lastScore = score; }
   } else if (score === 2 || score === 3) {
     percent = 55; barColor = "#d9b15c";
-    msg   = "&#9889; Not bad, but it still needs improvement.";
-    time  = "&#128336; Could take a few hours to crack";
-    title = "&#128578; Almost there";
+    msg   = "⚡; Not bad, but it still needs improvement.";
+    time  = "🕐; Could take a few hours to crack";
+    title = "🙂 Almost there";
     message.classList.add("medium-text");
     if (score !== lastScore) { lastScore = score; }
   } else {
     percent = 100; barColor = "#8ccf8a";
-    msg   = "&#9989; Nice! Your password is pretty good!";
-    time  = "&#128737;&#65039; " + estimateCrackTime(password);
-    title = "&#127881; Great job! Keep it up!";
+    msg   = "✅; Nice! Your password is pretty good!";
+    time  = "🛡; " + estimateCrackTime(password);
+    title = "🎉; Great job! Keep it up!";
     message.classList.add("good-text");
     if (score !== lastScore) { playSound('correct'); lastScore = score; }
   }
