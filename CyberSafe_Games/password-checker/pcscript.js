@@ -259,7 +259,7 @@ function updateUI(score, password, tips) {
   } else {
     tips.forEach((tip) => {
       const li = document.createElement("li");
-      li.textContent = "&#128161; " + tip;
+      li.textContent = "💡" + tip;
       tipsList.appendChild(li);
     });
   }
