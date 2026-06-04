@@ -836,7 +836,7 @@ function show_feedback(ok, clues){
   var title  = document.getElementById('dialog-title');
   var cluesEl= document.getElementById('dialog-clues');
 
-  icon.textContent  = ok ? '&#127881;' : '&#128543;';
+  icon.innerHTML  = ok ? '&#127881;' : '&#128543;';
   title.textContent = ok ? 'Good job!' : 'Oh no, not right!';
   title.className   = 'dialog-title ' + (ok ? 'correct' : 'wrong');
   banner.className  = 'dialog-banner ' + (ok ? 'correct' : 'wrong');
